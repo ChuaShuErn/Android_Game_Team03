@@ -12,8 +12,14 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -47,10 +53,29 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         if (fetchBtn != null)
             fetchBtn.setOnClickListener(this);
 
+        System.out.println("----------PRINTING OUT THE IMAGE URLS---------------");
         imgFileList = createDestFiles(); //get twenty blank files to store
+
+        //hardcode first
+        String thisURL = "https://stocksnap.io/view-photos/sort/trending/desc";
+
+
+        System.out.println("----------PRINTING OUT THE IMAGE URLS---------------");
+        if (getImgUrlList(thisURL)) {
+            int j =0;
+            for (String u : imgUrlList) {
+                System.out.println(u);
+            }
+        }
+        else {
+            System.out.println("printing failed---------");
+        }
+
+
+
+
+
     }
-
-
 
     protected ArrayList<File> createDestFiles() {
         ArrayList<File> imgFileList = new ArrayList<>();
@@ -66,18 +91,44 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
     protected boolean getImgUrlList(String mURL) {
         try {
-            URL myURL = new URL(mURL); //parse the url String into a URL object
-            URLConnection conn = myURL.openConnection(); // open connection for this URL obj
-            ArrayList<String> thisImgUrlList = new ArrayList<>();
-
-            //insert webscraping here!
-
-            imgUrlList = thisImgUrlList; //set the instance attribute;
-            return true;
+            ArrayList<String> thisImgUrlList = parseHTMLImgURLs(mURL);
+            if (thisImgUrlList != null && thisImgUrlList.size() >= 20) {
+                imgUrlList = thisImgUrlList;
+                return true;
+            }
+            else {
+                return false;
+            }
         }
         catch (Exception e) {
             return false;
         }
+    }
+
+    protected ArrayList<String> parseHTMLImgURLs(String uri) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Document doc = Jsoup.connect(uri).get();
+                    Elements links = doc.select("img[src]");
+                    ArrayList<String> thisImgUrlList = new ArrayList<>();
+                    for (Element link : links) {
+                        if (link.attr("src").contains(".jpg")) {
+                            thisImgUrlList.add(link.attr("src"));
+                            System.out.println(link.attr("src"));
+                        }
+                    }
+
+                    imgUrlList = thisImgUrlList;
+
+                } catch (IOException e) {
+                    imgUrlList = null;
+                }
+            }
+        });
+
+        return imgUrlList;
     }
 
     protected ImageDTO decodeImageIntoDTO(File DestFile, int imageID) {
