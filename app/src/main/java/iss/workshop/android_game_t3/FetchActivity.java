@@ -9,7 +9,7 @@ import android.widget.EditText;
 
 public class FetchActivity extends AppCompatActivity {
 
-    private String mURL;
+    private String mURL; // this is to hold the image catalogue URL
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
