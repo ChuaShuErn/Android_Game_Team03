@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -24,6 +25,9 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private ArrayList<ImageDTO> selectedImages = new ArrayList<>();
     private ArrayList<ImageDTO> gameImages = new ArrayList<>();
+    private int score=6;
+    private long clickedStartTime;
+    private long clickedEndTime;
 
     //--- This variables are used in the method onitemClick
     private ImageView image1=null;
@@ -75,7 +79,6 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         initMatchView();
 
 
-
         //This is a thread to change displayed images back to dummy when there is no match
         handler = new Handler();
         runnable = new Runnable() {
@@ -112,6 +115,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
         GridView gridView = findViewById(R.id.gameGridView);
         ViewGroup gridElement = (ViewGroup) gridView.getChildAt(position);
+        TextView scoreView=findViewById(R.id.score);
 
         //If no images are selected, set all dependent variables to null
         if(numOfSelectedImage == 0){
@@ -129,6 +133,8 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             previousPosition = position;
             image1 = (ImageView) gridElement.getChildAt(0);
             image1.setImageBitmap(gameImages.get(position).getBitmap());
+            score--;
+            clickedStartTime = System.currentTimeMillis();
         }
         //This code handles the second image click
         else if(image1!=null && image2 == null){
@@ -141,10 +147,16 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 image2.setImageBitmap(gameImages.get(position).getBitmap());
                 countMatchedPairs++;
                 matchText.setText(countMatchedPairs + " of " + selectedImages.size() + " images");
+                clickedEndTime = System.currentTimeMillis();
+                if ((clickedEndTime-clickedStartTime)<=5000)
+                    score+=5;
+                else
+                    score+=3;
             }
             else{
                 image2.setImageBitmap(gameImages.get(position).getBitmap());
                 handler.postDelayed(runnable, 300);
+                score--;
             }
 
             //If the number of matched images is same as selected image display winner
@@ -154,6 +166,11 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             numOfSelectedImage = 0;
         }
+        if (score<0)
+        {
+            //Implement GameOver function
+        }
+        scoreView.setText("Score: "+score);
     }
 
     @SuppressLint("SetTextI18n")
@@ -175,14 +192,17 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                         ,TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)
                         ,TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)-
                         TimeUnit.MILLISECONDS.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
-                timerView.setText(timeLeft);
+                timerView.setText("Time: "+timeLeft);
+                if(millisUntilFinished<10000)
+                {
+                    timerView.setTextColor(Color.RED);
+                }
             }
 
             @Override
             public void onFinish() {
-
+                //Implement game over function
             }
         }.start();
     }
-
 }
