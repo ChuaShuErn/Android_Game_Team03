@@ -2,31 +2,144 @@ package iss.workshop.android_game_t3;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
 
-public class FetchActivity extends AppCompatActivity {
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
 
+public class FetchActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private final int FETCH_IMAGES_MAX = 20;
+    private final int SELECT_IMAGES_MAX = 6;
     private String mURL; // this is to hold the image catalogue URL
+    private Thread downloadImageThread;
+    private File myDirectory;
+    private ArrayList<File> imgFileList;
+    private ArrayList<String> imgUrlList;
+    private ArrayList<ImageDTO> fetchedImages;
+    private ArrayList<ImageDTO> selectedImages;
+
+    //View attributes
+    private EditText urlSearchBar;
+    private Button fetchBtn;
+    private GridView imageGridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fetch);
+        myDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
-        Button fetchBtn = findViewById(R.id.btnFetch);
-        fetchBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        urlSearchBar = findViewById(R.id.urlSearchBar);
+        fetchBtn = findViewById(R.id.btnFetch);
+        if (fetchBtn != null)
+            fetchBtn.setOnClickListener(this);
 
-            }
-        });
-
-        EditText urlSearchBar = findViewById(R.id.urlSearchBar);
-        mURL = urlSearchBar.getText().toString();
+        imgFileList = createDestFiles(); //get twenty blank files to store
     }
 
+
+
+    protected ArrayList<File> createDestFiles() {
+        ArrayList<File> imgFileList = new ArrayList<>();
+
+        for (int i = 1; i <= FETCH_IMAGES_MAX; i++) {
+            String thisFileName = "Image" + i + ".jpg";
+            File thisFile = new File(myDirectory, thisFileName);
+            imgFileList.add(thisFile);
+            System.out.println("Created image files done: " + i);
+        }
+        return imgFileList;
+    }
+
+    protected boolean getImgUrlList(String mURL) {
+        try {
+            URL myURL = new URL(mURL); //parse the url String into a URL object
+            URLConnection conn = myURL.openConnection(); // open connection for this URL obj
+            ArrayList<String> thisImgUrlList = new ArrayList<>();
+
+            //insert webscraping here!
+
+            imgUrlList = thisImgUrlList; //set the instance attribute;
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    protected ImageDTO decodeImageIntoDTO(File DestFile, int imageID) {
+        Bitmap bmp = BitmapFactory.decodeFile(DestFile.getAbsolutePath());
+        return new ImageDTO(imageID, bmp);
+
+    }
+
+    protected boolean downloadImage(String imageURL, File destFile) {
+        try {
+            URL myURL = new URL(imageURL); //parse the url String into a URL object
+            URLConnection conn = myURL.openConnection(); // open connection for this URL obj
+
+            InputStream in = conn.getInputStream(); // create an input stream to read received data
+            FileOutputStream out = new FileOutputStream(destFile); // output stream to write data into destination file
+            byte[] buffer = new byte[1024];
+            int bytesRead = -1;
+            while ((bytesRead = in.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+            }
+
+            out.close();
+            in.close();
+            return true;
+
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public void onClick(View view) { //this onClick will be the Fetch btn
+        if (view != null) {
+            mURL = urlSearchBar.getText().toString();
+            if (getImgUrlList(mURL)) {
+                for (int i = 0; i<FETCH_IMAGES_MAX; i++){
+                    if (downloadImage(imgUrlList.get(i), imgFileList.get(i)))
+                    {
+                        fetchedImages.add(decodeImageIntoDTO(imgFileList.get(i), i+1));
+                    }
+                }
+            }
+
+            downloadImageThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    for (File f : imgFileList) {
+
+
+                    }
+                }
+            });
+
+        }
+
+
+    }
+
+
+    public void updateProgress(int numberDone) {
+
+    }
 
 }
