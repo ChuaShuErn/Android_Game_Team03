@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Android_Game_T3</string>
+    <string name="fetchBtn">Fetch</string>
+    <string name="url_hint">Your image catalogue URL</string>
 </resources>
