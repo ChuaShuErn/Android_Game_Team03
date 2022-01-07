@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class FetchActivity extends AppCompatActivity {
+
+    private String mURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +23,9 @@ public class FetchActivity extends AppCompatActivity {
 
             }
         });
+
+        EditText urlSearchBar = findViewById(R.id.urlSearchBar);
+        mURL = urlSearchBar.getText().toString();
     }
 
 

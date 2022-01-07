@@ -13,6 +13,7 @@
         android:orientation="horizontal">
 
         <EditText
+            android:id="@+id/urlSearchBar"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.80"
