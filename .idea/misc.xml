@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Diego/AndroidStudioProjects/Android_Game_Team03/app/src/main/res/layout/activity_main.xml" value="0.12613981762917933" />
+        <entry key="..\:/Users/Diego/AndroidStudioProjects/Android_Game_Team03/app/src/main/res/layout/activity_play.xml" value="0.2" />
+        <entry key="..\:/Users/Diego/AndroidStudioProjects/Android_Game_Team03/app/src/main/res/layout/pop_up_win.xml" value="0.2" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/Android_Game_Team03/app/src/main/res/drawable/ic_launcher_background.xml" value="0.18020833333333333" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/Android_Game_Team03/app/src/main/res/layout/activity_main.xml" value="0.3046875" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/Android_Game_Team03/app/src/main/res/layout/activity_play.xml" value="0.3046875" />
