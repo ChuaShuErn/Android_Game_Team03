@@ -26,6 +26,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     private int countMatchedPairs=0;
     private int previousPosition=-1;
     private int numOfSelectedImage=0;
+    private ArrayList<Integer> matchedImagePositions = new ArrayList<>();
 
     //-- Variables to be used for threads
     Handler handler;
@@ -102,6 +103,9 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         GridView gridView = findViewById(R.id.gameGridView);
         ViewGroup gridElement = (ViewGroup) gridView.getChildAt(position);
 
+        //if the same image is selected twice or an already matched image is selected then return
+        if(position==previousPosition || matchedImagePositions.contains(position)) return;
+
         //If no images are selected, set all dependent variables to null
         if(numOfSelectedImage == 0){
             previousPosition = -1;
@@ -118,12 +122,12 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         //This code handles the second image click
         else if(image1!=null && image2 == null){
-            if(position==previousPosition) return;
-
             image2 = (ImageView) gridElement.getChildAt(0);
 
             //If the image 1 and image 2 are same
             if(gameImages.get(previousPosition).getBitmap()==gameImages.get(position).getBitmap()){
+                matchedImagePositions.add(previousPosition);
+                matchedImagePositions.add(position);
                 image2.setImageBitmap(gameImages.get(position).getBitmap());
                 countMatchedPairs++;
             }
