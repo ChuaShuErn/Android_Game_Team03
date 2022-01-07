@@ -1,16 +1,26 @@
 package iss.workshop.android_game_t3;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AlertDialogLayout;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,7 +31,7 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class PlayActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class PlayActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     private ArrayList<ImageDTO> selectedImages = new ArrayList<>();
     private ArrayList<ImageDTO> gameImages = new ArrayList<>();
@@ -41,6 +51,11 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     //-- Variables to be used for threads
     Handler handler;
     Runnable runnable;
+
+    //Variables to be used in onClick (submitBtn and okBtn)
+    int score = 0;
+    String inputName = "Diego ";
+    AlertDialog myPopUpWinDialog;
 
     //This function is just a helper method -- to be deleted
     public void getSelectedImages(){
@@ -163,6 +178,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             if (countMatchedPairs==selectedImages.size())
             {
                 Toast.makeText(getApplicationContext(),"You win!",Toast.LENGTH_SHORT).show();
+                PopUpWin();
             }
             numOfSelectedImage = 0;
         }
@@ -172,6 +188,92 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         scoreView.setText("Score: "+score);
     }
+
+    public void PopUpWin(){
+        //inflate popUpWin layout into a view
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        View myPopUpWin = inflater.inflate(R.layout.pop_up_win,null, false);
+
+        //putting the view into a pop up
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(myPopUpWin);
+        builder.setCancelable(true);
+        myPopUpWinDialog = builder.create();
+
+        //unpack all the view(congrats, score, EditName, SubmitBtn)
+        TextView congratulation = myPopUpWin.findViewById(R.id.congratulations);
+
+        TextView scoreTextView = myPopUpWin.findViewById(R.id.score);
+        scoreTextView.setText("Your score is " + score);//need to get score from getScore()?
+
+        Button submitBtn = myPopUpWin.findViewById(R.id.submitBtn);
+        if(submitBtn != null){
+            submitBtn.setOnClickListener(this);
+            submitBtn.setEnabled(false); //only set to true when the inputName is filled in
+        }
+
+        EditText inputName = myPopUpWin.findViewById(R.id.inputName);
+        inputName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                //empty method
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(inputName.getText().toString().length() ==0){
+                    if(submitBtn!= null)
+                        submitBtn.setEnabled(false); //disable submit button when inputName empty
+                }else
+                    if(submitBtn!= null)
+                        submitBtn.setEnabled(true);
+
+            }
+
+            @Override //repeat implementation on TextChanged
+            public void afterTextChanged(Editable editable) {
+                if(inputName.getText().toString().length() ==0){
+                    if(submitBtn!= null)
+                        submitBtn.setEnabled(false); //disable submit button when inputName empty
+                }else
+                    if(submitBtn!= null)
+                        submitBtn.setEnabled(true);
+            }
+        });
+
+        myPopUpWinDialog.show();
+
+    }
+
+    @Override
+    public void onClick(View view){
+        int id = view.getId();
+
+        if(id ==R.id.submitBtn){
+            //edit the share pre
+            final SharedPreferences pref = getSharedPreferences("Leaderboard", MODE_PRIVATE);//initialize players.xml
+
+            int i=0;
+            //to detect last player inside player.xml
+            while(pref.contains("player"+i)){
+                i++;
+            }
+
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("player"+i,inputName);//add nth player
+            editor.putInt("score"+i,score); //add nth player's score //need to get score from getScore()?
+            editor.commit();
+            //data/data/iss.workshop.android_game_t3/shared_prefs/Leaderboard.xml -->check shared pref here
+
+            //dismiss the pop up
+            myPopUpWinDialog.dismiss();
+            //intent send to leaderboard Activity
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+
+        }
+    }
+
 
     @SuppressLint("SetTextI18n")
     protected void initMatchView(){
