@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class PlayActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
@@ -68,6 +71,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //This method is used to display the start of the game (dummy images)
         initGridView();
+        startTimer();
         initMatchView();
 
 
@@ -158,4 +162,27 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         matchText = findViewById(R.id.matchCounter);
         matchText.setText(countMatchedPairs + " of " + selectedImages.size() + " images");
     }
+
+    protected void startTimer()
+    {
+        TextView timerView=findViewById(R.id.timer);
+        long duration= TimeUnit.MINUTES.toMillis(1);
+
+        new CountDownTimer(duration, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                String timeLeft=String.format(Locale.ENGLISH,"%02d : %02d"
+                        ,TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)
+                        ,TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)-
+                        TimeUnit.MILLISECONDS.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
+                timerView.setText(timeLeft);
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }.start();
+    }
+
 }
