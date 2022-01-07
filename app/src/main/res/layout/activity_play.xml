@@ -26,16 +26,17 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/matches_label"
+                android:id="@+id/matchesTitle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="20dp"
+                android:text="@string/matches"
                 android:layout_weight="1"
                 android:gravity="bottom|center"
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/matchesTxt"
+                android:id="@+id/matchCounter"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.2"
