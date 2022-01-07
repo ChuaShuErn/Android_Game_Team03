@@ -2,6 +2,7 @@ package iss.workshop.android_game_t3;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     private int previousPosition=-1;
     private int numOfSelectedImage=0;
     private ArrayList<Integer> matchedImagePositions = new ArrayList<>();
+    TextView matchText;
 
     //-- Variables to be used for threads
     Handler handler;
@@ -65,6 +68,8 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //This method is used to display the start of the game (dummy images)
         initGridView();
+        initMatchView();
+
 
 
         //This is a thread to change displayed images back to dummy when there is no match
@@ -97,6 +102,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -122,6 +128,8 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         //This code handles the second image click
         else if(image1!=null && image2 == null){
+            if(position==previousPosition) return;
+
             image2 = (ImageView) gridElement.getChildAt(0);
 
             //If the image 1 and image 2 are same
@@ -130,6 +138,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 matchedImagePositions.add(position);
                 image2.setImageBitmap(gameImages.get(position).getBitmap());
                 countMatchedPairs++;
+                matchText.setText(countMatchedPairs + " of " + selectedImages.size() + " images");
             }
             else{
                 image2.setImageBitmap(gameImages.get(position).getBitmap());
@@ -143,5 +152,12 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             numOfSelectedImage = 0;
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    protected void initMatchView(){
+
+        matchText = findViewById(R.id.matchCounter);
+        matchText.setText(countMatchedPairs + " of " + selectedImages.size() + " images");
     }
 }
