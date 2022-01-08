@@ -154,9 +154,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     }
 
     protected void initGridView() {
-        fetchedImages = new ArrayList<>();
-        //TODO: Remove me
-        mockFetchedImages();
+        setDefaultImage();
         GridView gridView = (GridView) findViewById(R.id.fetchedImageGridView);
         adapter = new FetchedImageAdapter(this, fetchedImages);
         Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.dummy);
@@ -166,9 +164,10 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         gridView.setOnItemClickListener(listener);
     }
 
-    private void mockFetchedImages() {
+    private void setDefaultImage() {
+        fetchedImages = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            fetchedImages.add(new ImageDTO(R.drawable.laugh, BitmapFactory.decodeResource(this.getResources(), R.drawable.laugh)));
+            fetchedImages.add(new ImageDTO(R.drawable.unavailable, BitmapFactory.decodeResource(this.getResources(), R.drawable.unavailable)));
         }
     }
 
@@ -217,6 +216,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                             }
                         }
                         System.out.println("there are ..." + fetchedImages.size() + " imageDTO objects in fetchedImages");
+                        listener.setFiles(imgFileList);
                         listener.setFetchedImages(fetchedImages);
                         List<Boolean> list = new ArrayList<>(Arrays.asList(new Boolean[fetchedImages.size()]));
                         Collections.fill(list, Boolean.FALSE);
