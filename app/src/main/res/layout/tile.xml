@@ -8,6 +8,9 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:clickable="false"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        android:background="@drawable/border_image"
+        android:cropToPadding="true"
+        android:padding="1.5dp"/>
 
 </LinearLayout>

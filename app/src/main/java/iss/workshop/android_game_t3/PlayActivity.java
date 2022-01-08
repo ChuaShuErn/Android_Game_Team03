@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -101,6 +102,10 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             public void run() {
                 image1.setImageBitmap(BitmapFactory.decodeResource(PlayActivity.this.getResources(), R.drawable.dummy));
                 image2.setImageBitmap(BitmapFactory.decodeResource(PlayActivity.this.getResources(), R.drawable.dummy));
+
+                image1.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+                image2.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -166,6 +171,8 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                     @Override
                     public void run() {
                         image2.setImageBitmap(gameImages.get(position).getBitmap());
+                        image1.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+                        image2.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
                     }
                 });
 
@@ -183,6 +190,8 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                     @Override
                     public void run() {
                         image2.setImageBitmap(gameImages.get(position).getBitmap());
+                        image1.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
+                        image2.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
                     }
                 });
                 handler.postDelayed(runnable, 500);
