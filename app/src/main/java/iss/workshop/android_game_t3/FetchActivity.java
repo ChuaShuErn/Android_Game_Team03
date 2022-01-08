@@ -2,11 +2,15 @@ package iss.workshop.android_game_t3;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -24,6 +28,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class FetchActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -42,6 +49,8 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     private EditText urlSearchBar;
     private Button fetchBtn;
     private GridView imageGridView;
+    private SelectImgListener listener;
+    private BaseAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +63,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         if (fetchBtn != null)
             fetchBtn.setOnClickListener(this);
         isDownloadThreadRunning = false; //create page with false running
-
+        initGridView();
     }
 
     private void parseHTMLImgURLs() {
@@ -133,6 +142,25 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    protected void initGridView() {
+        fetchedImages = new ArrayList<>();
+        //TODO: Remove me
+        mockFetchedImages();
+        GridView gridView = (GridView) findViewById(R.id.fetchedImageGridView);
+        adapter = new FetchedImageAdapter(this, fetchedImages);
+        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.dummy);
+        listener = new SelectImgListener(this, bitmap);
+
+        gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(listener);
+    }
+
+    private void mockFetchedImages() {
+        for (int i = 0; i < 20; i++) {
+            fetchedImages.add(new ImageDTO(R.drawable.laugh, BitmapFactory.decodeResource(this.getResources(), R.drawable.laugh)));
+        }
+    }
+
     @Override
     public void onClick(View view) { //this onClick will be the Fetch btn
         if (view != null) {
@@ -178,6 +206,11 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                             }
                         }
                         System.out.println("there are ..." + fetchedImages.size() + " imageDTO objects in fetchedImages");
+                        listener.setFetchedImages(fetchedImages);
+                        List<Boolean> list = new ArrayList<>(Arrays.asList(new Boolean[fetchedImages.size()]));
+                        Collections.fill(list, Boolean.FALSE);
+                        listener.setSelectedFlags(list);
+                        listener.setDownloadFinished(true);
                         isDownloadThreadRunning = false;
                     } else
                         System.out.println("Please try a new URL --- Cannot get images OR not enough images ");
@@ -238,7 +271,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-/*    public class FetchedImageAdapter extends BaseAdapter{
+    public class FetchedImageAdapter extends BaseAdapter {
 
         private final Context context;
         private LayoutInflater inflater;
@@ -269,21 +302,20 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            if(convertView == null){
+            if (convertView == null) {
                 convertView = inflater.inflate(R.layout.grid_item, parent, false);
             }
 
             ImageView imageView = convertView.findViewById(R.id.gridImage);
 
-            for(ImageDTO image : fetchedImages){
+            for (ImageDTO image : fetchedImages) {
                 Bitmap bitmap = image.getBitmap();
                 imageView.setImageBitmap(bitmap);
             }
 
             return convertView;
         }
-    }*/
-
+    }
 
 
 }
