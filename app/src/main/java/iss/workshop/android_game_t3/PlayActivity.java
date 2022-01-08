@@ -52,6 +52,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     //-- Variables to be used for threads
     Handler handler;
     Runnable runnable;
+    CountDownTimer timer;
 
     //Variables to be used in onClick (submitBtn and okBtn)
     int score = 6;
@@ -305,10 +306,10 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void startTimer() {
         TextView timerView = findViewById(R.id.timer);
         long duration = TimeUnit.MINUTES.toMillis(1);
-        ImageView timer = (ImageView) findViewById(R.id.timerView);
+        ImageView timerImage = (ImageView) findViewById(R.id.timerView);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.shake);
 
-        new CountDownTimer(duration, 1000) {
+        timer =new CountDownTimer(duration, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 String timeLeft = String.format(Locale.ENGLISH, "%02d : %02d"
@@ -318,7 +319,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 timerView.setText(timeLeft);
                 if (millisUntilFinished < 10000) {
                     timerView.setTextColor(Color.RED);
-                    timer.startAnimation(animation);
+                    timerImage.startAnimation(animation);
                 }
             }
 
