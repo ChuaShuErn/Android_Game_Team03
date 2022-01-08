@@ -16,10 +16,11 @@
             android:id="@+id/urlSearchBar"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.80"
+            android:layout_weight="0.85"
+            android:text="@string/default_search_url"
             android:hint="@string/url_hint"
-            android:textSize="16sp"
-            android:autofillHints="" />
+            android:textSize="12sp"
+            android:autofillHints="https://stocksnap.io/search/food" />
 
 
         <Button
@@ -34,7 +35,14 @@
             android:padding="10dp"/>
     </LinearLayout>
 
-
+    <GridView
+        android:id="@+id/fetchedImageGridView"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:numColumns="4"
+        android:horizontalSpacing="4dp"
+        android:verticalSpacing="4dp" />
 
 
 </LinearLayout>
