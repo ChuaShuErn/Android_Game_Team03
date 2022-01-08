@@ -18,6 +18,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -286,6 +288,8 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     {
         TextView timerView=findViewById(R.id.timer);
         long duration= TimeUnit.MINUTES.toMillis(1);
+        ImageView timer=(ImageView) findViewById(R.id.timerView);
+        Animation animation = AnimationUtils.loadAnimation(this,R.anim.shake);
 
         new CountDownTimer(duration, 1000) {
             @Override
@@ -294,10 +298,11 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                         ,TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)
                         ,TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)-
                         TimeUnit.MILLISECONDS.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
-                timerView.setText("Time: "+timeLeft);
+                timerView.setText(timeLeft);
                 if(millisUntilFinished<10000)
                 {
                     timerView.setTextColor(Color.RED);
+                    timer.startAnimation(animation);
                 }
             }
 
