@@ -1,10 +1,6 @@
 package iss.workshop.android_game_t3;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AlertDialogLayout;
-
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,11 +33,8 @@ import java.util.concurrent.TimeUnit;
 
 public class PlayActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
 
-    private ArrayList<ImageDTO> selectedImages = new ArrayList<>();
-    private ArrayList<ImageDTO> gameImages = new ArrayList<>();
-    //private int score=6;
-    private long clickedStartTime;
-    private long clickedEndTime;
+    private final ArrayList<ImageDTO> selectedImages = new ArrayList<>();
+    private final ArrayList<ImageDTO> gameImages = new ArrayList<>();
 
     //--- This variables are used in the method onitemClick
     private ImageView image1=null;
@@ -49,8 +42,10 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     private int countMatchedPairs=0;
     private int previousPosition=-1;
     private int numOfSelectedImage=0;
-    private ArrayList<Integer> matchedImagePositions = new ArrayList<>();
+    private final ArrayList<Integer> matchedImagePositions = new ArrayList<>();
     TextView matchText;
+    private long clickedStartTime;
+    private long clickedEndTime;
 
     //-- Variables to be used for threads
     Handler handler;
@@ -73,7 +68,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         selectedImages.add(new ImageDTO(R.drawable.stop, BitmapFactory.decodeResource(this.getResources(),R.drawable.stop)));
     }
 
-    public void duplicateSeletedImages(){
+    public void duplicateSelectedImages(){
         for(ImageDTO imageDTO:selectedImages){
             gameImages.add(imageDTO);
             gameImages.add(imageDTO);
@@ -87,7 +82,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //This is all to be deleted
         getSelectedImages();
-        duplicateSeletedImages();
+        duplicateSelectedImages();
 
         //Shuffle the images so that the grid view has no adjacent same image
         Collections.shuffle(gameImages);
@@ -151,7 +146,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             previousPosition = position;
             image1 = (ImageView) gridElement.getChildAt(0);
 
-            image1.animate().rotationYBy(360).rotationXBy(360).setDuration(300).withEndAction(new Runnable() {
+            image1.animate().rotationYBy(360).rotationXBy(360).setDuration(150).withEndAction(new Runnable() {
                 @Override
                 public void run() {
                     image1.setImageBitmap(gameImages.get(position).getBitmap());
@@ -168,7 +163,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             if(gameImages.get(previousPosition).getBitmap()==gameImages.get(position).getBitmap()){
                 matchedImagePositions.add(previousPosition);
                 matchedImagePositions.add(position);
-                image2.animate().rotationYBy(360).rotationXBy(360).setDuration(300).withEndAction(new Runnable() {
+                image2.animate().rotationYBy(360).rotationXBy(360).setDuration(150).withEndAction(new Runnable() {
                     @Override
                     public void run() {
                         image2.setImageBitmap(gameImages.get(position).getBitmap());
@@ -184,13 +179,13 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                     score+=3;
             }
             else{
-                image2.animate().rotationYBy(360).rotationXBy(360).setDuration(300).withEndAction(new Runnable() {
+                image2.animate().rotationYBy(360).rotationXBy(360).setDuration(150).withEndAction(new Runnable() {
                     @Override
                     public void run() {
                         image2.setImageBitmap(gameImages.get(position).getBitmap());
                     }
                 });
-                handler.postDelayed(runnable, 300);
+                handler.postDelayed(runnable, 500);
                 score--;
             }
 
