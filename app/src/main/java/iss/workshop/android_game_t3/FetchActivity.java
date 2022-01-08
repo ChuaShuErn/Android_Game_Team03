@@ -30,7 +30,6 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     private final int FETCH_IMAGES_MAX = 20;
     private final int SELECT_IMAGES_MAX = 6;
     private String mURL; // this is to hold the image catalogue URL
-    private Thread downloadImageThread;
     private File myDirectory;
     private ArrayList<File> imgFileList;
     private ArrayList<String> imgUrlList;
@@ -53,39 +52,8 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         if (fetchBtn != null)
             fetchBtn.setOnClickListener(this);
 
-        //hardcode first
-        mURL = "https://stocksnap.io/view-photos/sort/trending/desc";
-
-
-        /*
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                imgFileList = createDestFiles(); //get twenty blank files to store
-                boolean haveImgURLs = getImgUrlList();
-                if (haveImgURLs)
-                    System.out.println("All good---ImgURLList Have-" + imgUrlList.size() + " URL strings");
-
-                fetchedImages = new ArrayList<>();
-
-                for (int i = 0; i<FETCH_IMAGES_MAX; i++){
-                    if (downloadThisImage(imgUrlList.get(i), imgFileList.get(i)))
-                    {
-                        int imgID = i+1;
-                        fetchedImages.add(decodeImageIntoDTO(imgFileList.get(i), imgID));
-                        System.out.println("Adding fetchImages ImageDTO object ---->> No." + imgID);
-
-                        //updateProgress() here
-
-                    }
-                }
-                System.out.println("there are ..." + fetchedImages.size() + " imageDTO objects in fetchedImages");
-
-
-            }
-        }).start();
-        */
-
+        //default website
+        //mURL = "https://stocksnap.io/view-photos/sort/trending/desc";
 
     }
 
@@ -96,7 +64,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
             Elements links = doc.select("img[src]");
             ArrayList<String> thisImgUrlList = new ArrayList<>();
             for (Element link : links) {
-                if (link.attr("src").contains(".jpg")) {
+                if (link.attr("src").contains(".jpg") && link.attr("src").contains("https://")) {
                     System.out.println("printing....");
                     thisImgUrlList.add(link.attr("src"));
                 }
@@ -172,30 +140,35 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         if (view != null) {
             mURL = urlSearchBar.getText().toString();
 
-            downloadImageThread = new Thread(new Runnable() {
+            Thread downloadImageThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     imgFileList = createDestFiles(); //get twenty blank files to store
                     boolean haveImgURLs = getImgUrlList();
                     if (haveImgURLs)
                         System.out.println("All good---ImgURLList Have-" + imgUrlList.size() + " URL strings");
+                    else
+                        System.out.println("Please try a new URL --- Cannot get images OR not enough images "); //interrupt thread and show error about url not working;
+
 
                     fetchedImages = new ArrayList<>();
 
-                    for (int i = 0; i<FETCH_IMAGES_MAX; i++){
-                        if (downloadThisImage(imgUrlList.get(i), imgFileList.get(i)))
-                        {
-                            int imgID = i+1;
+                    for (int i = 0; i < FETCH_IMAGES_MAX; i++) {
+                        if (downloadThisImage(imgUrlList.get(i), imgFileList.get(i))) {
+                            //----->onInterrupt() here :
+                            // clear GridView, clear Progress Bar,
+                            // clear all arrays to prevent overstacking array and restart thread
+
+                            int imgID = i + 1;
                             fetchedImages.add(decodeImageIntoDTO(imgFileList.get(i), imgID));
                             System.out.println("Adding fetchImages ImageDTO object ---->> No." + imgID);
 
-                            //updateProgress() here
+                            updateProgress(imgID); //update ProgressBar, ProgressText, GridView
 
                         }
                     }
+
                     System.out.println("there are ..." + fetchedImages.size() + " imageDTO objects in fetchedImages");
-
-
                 }
             });
             downloadImageThread.start();
@@ -204,6 +177,15 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void updateProgress(int numberDone) {
+
+        //1 - Update ProgressBar
+        System.out.println("UPDATING PROGRESS BAR:  ==== " + numberDone);
+
+        //2 - Update Progress Text
+        System.out.println("UPDATING PROGRESS TEXT:  ==== " + numberDone);
+
+        //3-  Update GridView with new image
+        System.out.println("UPDATING GridView:  ==== " + numberDone);
 
     }
 
