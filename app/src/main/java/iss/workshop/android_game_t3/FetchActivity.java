@@ -108,11 +108,9 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
             parseHTMLImgURLs();
             if (imgUrlList != null && imgUrlList.size() >= 20) {
                 return 1; //1 = all good
-            }
-            else if (imgUrlList.size() < 20) {
+            } else if (imgUrlList.size() < 20) {
                 return 2;
-            }
-            else
+            } else
                 return 3; //invalid url
         } catch (Exception e) {
             return 3;
@@ -169,7 +167,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
     private void setDefaultImage() {
         fetchedImages = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < FETCH_IMAGES_MAX; i++) {
             fetchedImages.add(new ImageDTO(R.drawable.unavailable, BitmapFactory.decodeResource(this.getResources(), R.drawable.unavailable)));
         }
     }
@@ -220,20 +218,13 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                             }
                         }
                         System.out.println("there are ..." + fetchedImages.size() + " imageDTO objects in fetchedImages");
-                        listener.setFiles(imgFileList);
-                        listener.setFetchedImages(fetchedImages);
-                        List<Boolean> list = new ArrayList<>(Arrays.asList(new Boolean[fetchedImages.size()]));
-                        Collections.fill(list, Boolean.FALSE);
-                        listener.setSelectedFlags(list);
-                        listener.setDownloadFinished(true);
+                        setUpListener();
                         isDownloadThreadRunning = false;
-                    } else
-                    {
+                    } else {
                         if (fetchURLStatusCode == 2) { //
                             System.out.println(">>>> TOAST: Cannot get enough images");
                             runOnUiThread(() -> enterNewURLToast(true));
-                        }
-                        else { // 3 = invalid URL
+                        } else { // 3 = invalid URL
                             System.out.println(">>>> TOAST: invalid URL");
                             runOnUiThread(() -> enterNewURLToast(false));
                         }
@@ -245,6 +236,15 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
             downloadImageThread.start();
 
         }
+    }
+
+    private void setUpListener() {
+        listener.setFiles(imgFileList);
+        listener.setFetchedImages(fetchedImages);
+        List<Boolean> list = new ArrayList<>(Arrays.asList(new Boolean[fetchedImages.size()]));
+        Collections.fill(list, Boolean.FALSE);
+        listener.setSelectedFlags(list);
+        listener.setDownloadFinished(true);
     }
 
     public class progressUiRunnable implements Runnable {
