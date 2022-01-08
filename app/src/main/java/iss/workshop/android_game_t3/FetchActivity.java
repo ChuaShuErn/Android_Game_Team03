@@ -49,45 +49,66 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         myDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
         urlSearchBar = findViewById(R.id.urlSearchBar);
-        fetchBtn = findViewById(R.id.btnFetch);
+        fetchBtn = findViewById(R.id.fetchBtn);
         if (fetchBtn != null)
             fetchBtn.setOnClickListener(this);
 
-        imgFileList = createDestFiles(); //get twenty blank files to store
-
         //hardcode first
-        String thisURL = "https://stocksnap.io/view-photos/sort/trending/desc";
+        mURL = "https://stocksnap.io/view-photos/sort/trending/desc";
 
 
-        parseHTMLImgURLs();
+        /*
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                imgFileList = createDestFiles(); //get twenty blank files to store
+                boolean haveImgURLs = getImgUrlList();
+                if (haveImgURLs)
+                    System.out.println("All good---ImgURLList Have-" + imgUrlList.size() + " URL strings");
+
+                fetchedImages = new ArrayList<>();
+
+                for (int i = 0; i<FETCH_IMAGES_MAX; i++){
+                    if (downloadThisImage(imgUrlList.get(i), imgFileList.get(i)))
+                    {
+                        int imgID = i+1;
+                        fetchedImages.add(decodeImageIntoDTO(imgFileList.get(i), imgID));
+                        System.out.println("Adding fetchImages ImageDTO object ---->> No." + imgID);
+
+                        //updateProgress() here
+
+                    }
+                }
+                System.out.println("there are ..." + fetchedImages.size() + " imageDTO objects in fetchedImages");
+
+
+            }
+        }).start();
+        */
+
 
     }
 
     private void parseHTMLImgURLs() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Document doc = Jsoup.connect("https://stocksnap.io/view-photos/sort/trending/desc").get();
-                    Elements links = doc.select("img[src]");
-                    ArrayList<String> thisImgUrlList = new ArrayList<>();
-                    for (Element link : links) {
-                        if (link.attr("src").contains(".jpg")) {
-                            System.out.println("printing....");
-                            thisImgUrlList.add(link.attr("src"));
-                        }
-                    }
 
-                    imgUrlList = thisImgUrlList; //will take 2 seconds to fetch URL, therefore can't call imgUrlList variable early otherwise null
-                    for (String u : imgUrlList)
-                        System.out.println(u);
-
-                } catch (IOException e) {
-                    ArrayList<String> thisImgUrlList = null;
+        try {
+            Document doc = Jsoup.connect(mURL).get();
+            Elements links = doc.select("img[src]");
+            ArrayList<String> thisImgUrlList = new ArrayList<>();
+            for (Element link : links) {
+                if (link.attr("src").contains(".jpg")) {
+                    System.out.println("printing....");
+                    thisImgUrlList.add(link.attr("src"));
                 }
             }
-        }).start();
 
+            imgUrlList = thisImgUrlList; //will take 2 seconds to fetch URL, therefore can't call imgUrlList variable early otherwise null
+            for (String u : imgUrlList)
+                System.out.println(u);
+
+        } catch (IOException e) {
+            ArrayList<String> thisImgUrlList = null;
+        }
 
     }
 
@@ -103,7 +124,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         return imgFileList;
     }
 
-    protected boolean getImgUrlList(String mURL) {
+    protected boolean getImgUrlList() {
         try {
             parseHTMLImgURLs();
             if (imgUrlList != null && imgUrlList.size() >= 20) {
@@ -118,14 +139,12 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-
     protected ImageDTO decodeImageIntoDTO(File DestFile, int imageID) {
         Bitmap bmp = BitmapFactory.decodeFile(DestFile.getAbsolutePath());
         return new ImageDTO(imageID, bmp);
-
     }
 
-    protected boolean downloadImage(String imageURL, File destFile) {
+    protected boolean downloadThisImage(String imageURL, File destFile) {
         try {
             URL myURL = new URL(imageURL); //parse the url String into a URL object
             URLConnection conn = myURL.openConnection(); // open connection for this URL obj
@@ -152,30 +171,37 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) { //this onClick will be the Fetch btn
         if (view != null) {
             mURL = urlSearchBar.getText().toString();
-            if (getImgUrlList(mURL)) {
-                for (int i = 0; i<FETCH_IMAGES_MAX; i++){
-                    if (downloadImage(imgUrlList.get(i), imgFileList.get(i)))
-                    {
-                        fetchedImages.add(decodeImageIntoDTO(imgFileList.get(i), i+1));
-                    }
-                }
-            }
 
             downloadImageThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    for (File f : imgFileList) {
+                    imgFileList = createDestFiles(); //get twenty blank files to store
+                    boolean haveImgURLs = getImgUrlList();
+                    if (haveImgURLs)
+                        System.out.println("All good---ImgURLList Have-" + imgUrlList.size() + " URL strings");
 
+                    fetchedImages = new ArrayList<>();
 
+                    for (int i = 0; i<FETCH_IMAGES_MAX; i++){
+                        if (downloadThisImage(imgUrlList.get(i), imgFileList.get(i)))
+                        {
+                            int imgID = i+1;
+                            fetchedImages.add(decodeImageIntoDTO(imgFileList.get(i), imgID));
+                            System.out.println("Adding fetchImages ImageDTO object ---->> No." + imgID);
+
+                            //updateProgress() here
+
+                        }
                     }
+                    System.out.println("there are ..." + fetchedImages.size() + " imageDTO objects in fetchedImages");
+
+
                 }
             });
+            downloadImageThread.start();
 
         }
-
-
     }
-
 
     public void updateProgress(int numberDone) {
 

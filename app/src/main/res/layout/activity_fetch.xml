@@ -16,9 +16,10 @@
             android:id="@+id/urlSearchBar"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.80"
+            android:layout_weight="0.85"
+            android:text="https://stocksnap.io/view-photos/sort/trending/desc"
             android:hint="@string/url_hint"
-            android:textSize="16sp"
+            android:textSize="12sp"
             android:autofillHints="" />
 
 
