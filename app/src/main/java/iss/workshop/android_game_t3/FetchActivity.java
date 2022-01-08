@@ -119,11 +119,11 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     protected void enterNewURLToast(boolean isURLValid) {
         String msg = "";
         if (!isURLValid)
-            msg = "Unable to parse webpage. Please enter a new URL.";
+            msg = "Unable to parse webpage. \n Please enter a valid URL.";
         else
-            msg = "Insufficient images on webpage. Please enter a new URL";
+            msg = "Insufficient images on webpage. \n Please enter a new URL";
 
-        Toast.makeText(this, msg, Toast.LENGTH_LONG);
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 
     protected ImageDTO decodeImageIntoDTO(File DestFile, int imageID) {
@@ -224,9 +224,16 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                         listener.setDownloadFinished(true);
                         isDownloadThreadRunning = false;
                     } else
+                    {
                         System.out.println("Please try a new URL --- Cannot get images OR not enough images ");
-                    isDownloadThreadRunning = false;
-                    //interrupt thread and show error about url not working;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                enterNewURLToast(false);
+                            }
+                        });
+                        isDownloadThreadRunning = false;
+                    }
                 }
             });
             downloadImageThread.start();
