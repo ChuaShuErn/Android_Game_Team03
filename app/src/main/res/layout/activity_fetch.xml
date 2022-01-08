@@ -17,10 +17,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.85"
-            android:text="https://stocksnap.io/view-photos/sort/trending/desc"
+            android:text="@string/default_search_url"
             android:hint="@string/url_hint"
             android:textSize="12sp"
-            android:autofillHints="" />
+            android:autofillHints="https://stocksnap.io/search/food" />
 
 
         <Button
