@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -113,6 +114,16 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         } catch (Exception e) {
             return false;
         }
+    }
+
+    protected void enterNewURLToast(boolean isURLValid) {
+        String msg = "";
+        if (!isURLValid)
+            msg = "Unable to parse webpage. Please enter a new URL.";
+        else
+            msg = "Insufficient images on webpage. Please enter a new URL";
+
+        Toast.makeText(this, msg, Toast.LENGTH_LONG);
     }
 
     protected ImageDTO decodeImageIntoDTO(File DestFile, int imageID) {
