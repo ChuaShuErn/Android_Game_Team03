@@ -53,26 +53,40 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         if (fetchBtn != null)
             fetchBtn.setOnClickListener(this);
 
-        System.out.println("----------PRINTING OUT THE IMAGE URLS---------------");
         imgFileList = createDestFiles(); //get twenty blank files to store
 
         //hardcode first
         String thisURL = "https://stocksnap.io/view-photos/sort/trending/desc";
 
 
-        System.out.println("----------PRINTING OUT THE IMAGE URLS---------------");
-        if (getImgUrlList(thisURL)) {
-            int j =0;
-            for (String u : imgUrlList) {
-                System.out.println(u);
+        parseHTMLImgURLs();
+
+    }
+
+    private void parseHTMLImgURLs() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Document doc = Jsoup.connect("https://stocksnap.io/view-photos/sort/trending/desc").get();
+                    Elements links = doc.select("img[src]");
+                    ArrayList<String> thisImgUrlList = new ArrayList<>();
+                    for (Element link : links) {
+                        if (link.attr("src").contains(".jpg")) {
+                            System.out.println("printing....");
+                            thisImgUrlList.add(link.attr("src"));
+                        }
+                    }
+
+                    imgUrlList = thisImgUrlList; //will take 2 seconds to fetch URL, therefore can't call imgUrlList variable early otherwise null
+                    for (String u : imgUrlList)
+                        System.out.println(u);
+
+                } catch (IOException e) {
+                    ArrayList<String> thisImgUrlList = null;
+                }
             }
-        }
-        else {
-            System.out.println("printing failed---------");
-        }
-
-
-
+        }).start();
 
 
     }
@@ -91,9 +105,8 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
     protected boolean getImgUrlList(String mURL) {
         try {
-            ArrayList<String> thisImgUrlList = parseHTMLImgURLs(mURL);
-            if (thisImgUrlList != null && thisImgUrlList.size() >= 20) {
-                imgUrlList = thisImgUrlList;
+            parseHTMLImgURLs();
+            if (imgUrlList != null && imgUrlList.size() >= 20) {
                 return true;
             }
             else {
@@ -105,31 +118,6 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    protected ArrayList<String> parseHTMLImgURLs(String uri) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Document doc = Jsoup.connect(uri).get();
-                    Elements links = doc.select("img[src]");
-                    ArrayList<String> thisImgUrlList = new ArrayList<>();
-                    for (Element link : links) {
-                        if (link.attr("src").contains(".jpg")) {
-                            thisImgUrlList.add(link.attr("src"));
-                            System.out.println(link.attr("src"));
-                        }
-                    }
-
-                    imgUrlList = thisImgUrlList;
-
-                } catch (IOException e) {
-                    imgUrlList = null;
-                }
-            }
-        });
-
-        return imgUrlList;
-    }
 
     protected ImageDTO decodeImageIntoDTO(File DestFile, int imageID) {
         Bitmap bmp = BitmapFactory.decodeFile(DestFile.getAbsolutePath());

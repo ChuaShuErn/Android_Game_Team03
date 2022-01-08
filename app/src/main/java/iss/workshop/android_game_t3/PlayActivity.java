@@ -35,7 +35,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private ArrayList<ImageDTO> selectedImages = new ArrayList<>();
     private ArrayList<ImageDTO> gameImages = new ArrayList<>();
-    private int score=6;
+    //private int score=6;
     private long clickedStartTime;
     private long clickedEndTime;
 
