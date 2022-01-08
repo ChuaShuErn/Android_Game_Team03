@@ -142,7 +142,6 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
             mURL = urlSearchBar.getText().toString();
             if (isDownloadThreadRunning == true && downloadImageThread != null) {
                 downloadImageThread.interrupt();
-                housekeepOnDowndloadInterrupt();
             }
 
             downloadImageThread = new Thread(new Runnable() {
