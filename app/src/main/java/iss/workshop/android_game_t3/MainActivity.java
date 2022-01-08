@@ -1,11 +1,11 @@
 package iss.workshop.android_game_t3;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             Button fetchBtn = findViewById(R.id.btnFetch);
             Button playBtn = findViewById(R.id.btnPlay);
+            Button leaderBoardBtn = findViewById(R.id.btnLeaderBoard);
 
             //set onClickListener
             if (fetchBtn != null) {
@@ -26,6 +27,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (playBtn != null) {
                 playBtn.setOnClickListener(this);
             }
+
+            if(leaderBoardBtn != null){
+                leaderBoardBtn.setOnClickListener(this);
+            }
+
         }
 
         @Override
@@ -47,6 +53,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 //image adapter
                 Intent intent = new Intent(this, PlayActivity.class);
+
+                startActivity(intent);
+
+            }
+
+            if (id == R.id.btnLeaderBoard) {
+
+
+                //image adapter
+                Intent intent = new Intent(this, LeaderboardActivity.class);
 
                 startActivity(intent);
 
