@@ -53,11 +53,11 @@ public class SelectImgListener implements AdapterView.OnItemClickListener {
         Boolean selected = !selectedFlags.get(position);
         selectedFlags.set(position, selected);
 
-        ImageView clickedView = (ImageView) gridElement.getChildAt(0);
+        ImageView tickBox = gridElement.findViewById(R.id.tickBox);
         if (selected) {
-            clickedView.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+            tickBox.setVisibility(View.VISIBLE);
         } else {
-            clickedView.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+            tickBox.setVisibility(View.INVISIBLE);
         }
 
         int numOfSelected = Collections.frequency(selectedFlags, true);
