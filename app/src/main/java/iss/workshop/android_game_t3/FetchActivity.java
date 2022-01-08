@@ -35,6 +35,8 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     private ArrayList<String> imgUrlList;
     private ArrayList<ImageDTO> fetchedImages;
     private ArrayList<ImageDTO> selectedImages;
+    private boolean isDownloadThreadRunning;
+    private Thread downloadImageThread;
 
     //View attributes
     private EditText urlSearchBar;
@@ -51,6 +53,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         fetchBtn = findViewById(R.id.fetchBtn);
         if (fetchBtn != null)
             fetchBtn.setOnClickListener(this);
+        isDownloadThreadRunning = false; //create page with false running
 
     }
 
@@ -137,19 +140,39 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) { //this onClick will be the Fetch btn
         if (view != null) {
             mURL = urlSearchBar.getText().toString();
+            if (isDownloadThreadRunning == true && downloadImageThread != null) {
+                downloadImageThread.interrupt();
+                housekeepOnDowndloadInterrupt();
+            }
 
-            Thread downloadImageThread = new Thread(new Runnable() {
+            downloadImageThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    isDownloadThreadRunning = true; //start running, say True
+
                     imgFileList = createDestFiles(); //get twenty blank files to store
+
                     if (getImgUrlList()) {
                         System.out.println("All good---ImgURLList Have-" + imgUrlList.size() + " URL strings");
                         fetchedImages = new ArrayList<>();
                         for (int i = 0; i < FETCH_IMAGES_MAX; i++) {
                             if (downloadThisImage(imgUrlList.get(i), imgFileList.get(i))) {
-                                //----->onInterrupt() here :
-                                // clear GridView, clear Progress Bar,
-                                // clear all arrays to prevent overstacking array and restart thread
+
+                                //>onInterrupt() clear GridView + Progress, clear arrays to prevent overstacking
+                                if (downloadImageThread.interrupted()){
+                                    /*
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            while(!housekeepOnDowndloadInterrupt())
+                                                ;
+                                        }
+                                    });
+                                    */
+                                    isDownloadThreadRunning = false;
+                                    return;
+                                }
+
                                 int imgID = i + 1;
                                 fetchedImages.add(decodeImageIntoDTO(imgFileList.get(i), imgID));
                                 System.out.println("Adding fetchImages ImageDTO object ---->> No." + imgID);
@@ -159,9 +182,12 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                             }
                         }
                         System.out.println("there are ..." + fetchedImages.size() + " imageDTO objects in fetchedImages");
+                        isDownloadThreadRunning = false;
                     }
                     else
-                        System.out.println("Please try a new URL --- Cannot get images OR not enough images "); //interrupt thread and show error about url not working;
+                        System.out.println("Please try a new URL --- Cannot get images OR not enough images ");
+                        isDownloadThreadRunning = false;
+                    //interrupt thread and show error about url not working;
                 }
             });
             downloadImageThread.start();
@@ -184,7 +210,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public void updateProgressViews(int numberDone) {
+    protected void updateProgressViews(int numberDone) {
 
         //1 - Update ProgressBar
         System.out.println("UPDATING PROGRESS BAR:  ==== " + numberDone);
@@ -196,5 +222,26 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         System.out.println("UPDATING GridView:  ==== " + numberDone);
 
     }
+
+    protected boolean housekeepOnDowndloadInterrupt() {
+        //1 - reset ProgressBar
+
+
+        System.out.println("++++++Reset PROGRESS BAR after interrupt +++++ ");
+
+
+        //2 - Update Progress Text
+        System.out.println("++++++Reset PROGRESS Text after interrupt +++++ ");
+
+        //3-  Update GridView with new image
+        System.out.println("++++++Reset GridView after interrupt +++++ ");
+
+        fetchedImages = null;
+        imgFileList = null;
+
+        return true;
+
+    }
+
 
 }
