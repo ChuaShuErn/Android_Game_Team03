@@ -1,7 +1,9 @@
 package iss.workshop.android_game_t3;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -61,9 +63,9 @@ public class SelectImgListener implements AdapterView.OnItemClickListener {
 
         ImageView clickedView = (ImageView) gridElement.getChildAt(0);
         if (selected) {
-            clickedView.setImageBitmap(selectedBitmap);
+            clickedView.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
         } else {
-            clickedView.setImageBitmap(fetchedImages.get(position).getBitmap());
+            clickedView.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
         }
 
         int numOfSelected = Collections.frequency(selectedFlags, true);
