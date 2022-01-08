@@ -238,5 +238,52 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+/*    public class FetchedImageAdapter extends BaseAdapter{
+
+        private final Context context;
+        private LayoutInflater inflater;
+
+        public FetchedImageAdapter(Context context, ArrayList<ImageDTO> fetchedImages) {
+            this.context = context;
+            this.fetchedImages = fetchedImages;
+            this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        private ArrayList<ImageDTO> fetchedImages;
+
+        @Override
+        public int getCount() {
+            return 20;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            if(convertView == null){
+                convertView = inflater.inflate(R.layout.grid_item, parent, false);
+            }
+
+            ImageView imageView = convertView.findViewById(R.id.gridImage);
+
+            for(ImageDTO image : fetchedImages){
+                Bitmap bitmap = image.getBitmap();
+                imageView.setImageBitmap(bitmap);
+            }
+
+            return convertView;
+        }
+    }*/
+
+
 
 }
