@@ -273,6 +273,13 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         //3-  Update GridView with new image
         System.out.println("UPDATING GridView:  ==== " + numberDone);
 
+        FetchedImageAdapter fetchedImageAdapter = new FetchedImageAdapter(this, fetchedImages);
+        imageGridView = findViewById(R.id.fetchedImageGridView);
+        if(imageGridView != null){
+            imageGridView.setAdapter(fetchedImageAdapter);
+        }
+
+
     }
 
     protected boolean housekeepOnDownloadInterrupt() {
@@ -295,7 +302,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    public class FetchedImageAdapter extends BaseAdapter {
+    public class FetchedImageAdapter extends BaseAdapter{
 
         private final Context context;
         private LayoutInflater inflater;
@@ -326,16 +333,19 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            if (convertView == null) {
+            if(convertView == null){
                 convertView = inflater.inflate(R.layout.grid_item, parent, false);
             }
 
             ImageView imageView = convertView.findViewById(R.id.gridImage);
 
-            for (ImageDTO image : fetchedImages) {
-                Bitmap bitmap = image.getBitmap();
-                imageView.setImageBitmap(bitmap);
+            Bitmap[] bitmaps = new Bitmap[20];
+
+            for(int i = 0; i < fetchedImages.size(); i++){
+                bitmaps[i] = fetchedImages.get(i).getBitmap();
             }
+
+            imageView.setImageBitmap(bitmaps[position]);
 
             return convertView;
         }
