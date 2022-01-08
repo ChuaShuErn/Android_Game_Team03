@@ -158,8 +158,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         setDefaultImage();
         GridView gridView = (GridView) findViewById(R.id.fetchedImageGridView);
         adapter = new FetchedImageAdapter(this, fetchedImages);
-        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.dummy);
-        listener = new SelectImgListener(this, bitmap);
+        listener = new SelectImgListener(this);
 
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(listener);
@@ -240,7 +239,6 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
     private void setUpListener() {
         listener.setFiles(imgFileList);
-        listener.setFetchedImages(fetchedImages);
         List<Boolean> list = new ArrayList<>(Arrays.asList(new Boolean[fetchedImages.size()]));
         Collections.fill(list, Boolean.FALSE);
         listener.setSelectedFlags(list);

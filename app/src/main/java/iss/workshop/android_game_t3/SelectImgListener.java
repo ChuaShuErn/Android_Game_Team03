@@ -2,7 +2,6 @@ package iss.workshop.android_game_t3;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,24 +20,17 @@ import java.util.stream.IntStream;
 
 public class SelectImgListener implements AdapterView.OnItemClickListener {
     private final AppCompatActivity currentActivity;
-    private final Bitmap selectedBitmap;
     private List<File> files;
-    private List<ImageDTO> fetchedImages;
     private List<Boolean> selectedFlags;
     private boolean downloadFinished;
 
-    public SelectImgListener(AppCompatActivity currentActivity, Bitmap selectedBitmap) {
+    public SelectImgListener(AppCompatActivity currentActivity) {
         this.currentActivity = currentActivity;
-        this.selectedBitmap = selectedBitmap;
         this.downloadFinished = false;
     }
 
     public void setFiles(List<File> files) {
         this.files = files;
-    }
-
-    public void setFetchedImages(List<ImageDTO> fetchedImages) {
-        this.fetchedImages = fetchedImages;
     }
 
     public void setSelectedFlags(List<Boolean> selectedFlags) {
