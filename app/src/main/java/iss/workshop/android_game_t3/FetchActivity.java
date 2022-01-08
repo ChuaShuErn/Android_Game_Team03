@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -52,6 +54,9 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     private GridView imageGridView;
     private SelectImgListener listener;
     private BaseAdapter adapter;
+    private ProgressBar progressBar;
+    private TextView progressText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +167,11 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(listener);
+
+        progressBar = findViewById(R.id.progressBar);
+        progressText = findViewById(R.id.progressText);
+        progressBar.setVisibility(View.INVISIBLE);
+        progressText.setText("");
     }
 
     private void setDefaultImage() {
@@ -265,8 +275,20 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         //1 - Update ProgressBar
         System.out.println("UPDATING PROGRESS BAR:  ==== " + numberDone);
 
+        progressBar.setVisibility(View.VISIBLE);
+        progressBar.incrementProgressBy(5);
+        Integer progress = progressBar.getProgress();
+
         //2 - Update Progress Text
         System.out.println("UPDATING PROGRESS TEXT:  ==== " + numberDone);
+
+        String loadingText = "Downloading " + progress / 5 + " of 20 images";
+        if(progress == 100){
+            loadingText = "Download completed";
+
+            Toast.makeText(FetchActivity.this, "Select 6 images to start game!", Toast.LENGTH_LONG).show();
+        }
+        progressText.setText(loadingText);
 
         //3-  Update GridView with new image
         System.out.println("UPDATING GridView:  ==== " + numberDone);

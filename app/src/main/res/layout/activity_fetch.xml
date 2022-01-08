@@ -44,5 +44,24 @@
         android:horizontalSpacing="4dp"
         android:verticalSpacing="4dp" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#3EE7ED"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/progressText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:textColor="#100F0F"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
 
 </LinearLayout>
