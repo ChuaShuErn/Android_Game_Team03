@@ -56,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="20dp"
-                android:text="Score: 6"
+                android:text="Score: 0"
                 android:textStyle="bold"
                 android:layout_weight="1.1"
                 android:gravity="center"
@@ -75,16 +75,15 @@
                     android:scaleType="fitEnd"
                     android:adjustViewBounds="true"
                     android:src="@drawable/ic_timer"/>
-                <TextView
-                    android:id="@+id/timer"
+                <Chronometer
+                    android:id="@+id/chronometer"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.4"
                     android:gravity="left|center"
                     android:paddingLeft="8dp"
-                    android:text="00:00"
                     android:textSize="19sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold|italic" />
             </LinearLayout>
         </LinearLayout>
 

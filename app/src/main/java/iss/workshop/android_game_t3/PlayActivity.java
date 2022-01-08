@@ -11,8 +11,8 @@ import android.content.res.ColorStateList;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -22,6 +22,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -30,15 +31,18 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class PlayActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     private final ArrayList<ImageDTO> selectedImages = new ArrayList<>();
     private final ArrayList<ImageDTO> gameImages = new ArrayList<>();
 
-    //--- This variables are used in the method onitemClick
+    //---This variables are used in the run-up timer
+    private Chronometer stopWatch;
+    private long stopTime;
+    private boolean isStopWatchRunning;
+
+    //--- This variables are used in the method onItemClick
     private ImageView image1 = null;
     private ImageView image2 = null;
     private int countMatchedPairs = 0;
@@ -52,10 +56,9 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     //-- Variables to be used for threads
     Handler handler;
     Runnable runnable;
-    CountDownTimer timer;
 
     //Variables to be used in onClick (submitBtn and okBtn)
-    int score = 6;
+    int score = 0;
     String inputName = "Diego ";
     AlertDialog myPopUpWinDialog;
 
@@ -92,7 +95,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //This method is used to display the start of the game (dummy images)
         initGridView();
-        startTimer();
+        startStopWatch();
         initMatchView();
 
 
@@ -157,7 +160,6 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                     image1.setImageBitmap(gameImages.get(position).getBitmap());
                 }
             });
-            score--;
             clickedStartTime = System.currentTimeMillis();
         }
         //This code handles the second image click
@@ -179,13 +181,11 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 countMatchedPairs++;
                 matchText.setText(countMatchedPairs + " of " + selectedImages.size() + " images");
+                //Calculating the score
                 clickedEndTime = System.currentTimeMillis();
-                if ((clickedEndTime - clickedStartTime) <= 5000) {
-                    score += 5;
-                    if ((clickedEndTime - clickedStartTime) <= 3000)
-                        score += 3;
-                } else
-                    score += 3;
+                if ((clickedEndTime - clickedStartTime) <= 3000) score+=9; //Clicked the correct paired within 3 seconds
+                else if ((clickedEndTime - clickedStartTime) <= 5000) score += 7;//Clicked the correct paired within 5 seconds
+                else score += 5;
             } else {
                 image2.animate().rotationBy(360).setDuration(200).withEndAction(new Runnable() {
                     @Override
@@ -196,18 +196,24 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                 });
                 handler.postDelayed(runnable, 500);
-                score--;
+                score %= 19;
             }
 
             //If the number of matched images is same as selected image display winner
             if (countMatchedPairs == selectedImages.size()) {
+                stopStopWatch();
+                //Calculating the final score
+                if (stopTime<=15000) score*=54;
+                else if (stopTime<=20000) score*=45;
+                else if (stopTime<=25000) score*=36;
+                else if (stopTime<=30000) score*=27;
+                else if (stopTime<=40000) score*=18;
+                else if (stopTime<=55000) score*=9;
+                else score*=3;
                 Toast.makeText(getApplicationContext(), "You win!", Toast.LENGTH_SHORT).show();
                 PopUpWin();
             }
             numOfSelectedImage = 0;
-        }
-        if (score < 0) {
-            //Implement GameOver function
         }
         scoreView.setText("Score: " + score);
     }
@@ -303,30 +309,27 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         matchText.setText(countMatchedPairs + " of " + selectedImages.size() + " images");
     }
 
-    protected void startTimer() {
-        TextView timerView = findViewById(R.id.timer);
-        long duration = TimeUnit.MINUTES.toMillis(1);
+    protected void startStopWatch() {
+        stopWatch=findViewById(R.id.chronometer);
         ImageView timerImage = (ImageView) findViewById(R.id.timerView);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.shake);
-
-        timer =new CountDownTimer(duration, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                String timeLeft = String.format(Locale.ENGLISH, "%02d : %02d"
-                        , TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)
-                        , TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-                                TimeUnit.MILLISECONDS.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
-                timerView.setText(timeLeft);
-                if (millisUntilFinished < 10000) {
-                    timerView.setTextColor(Color.RED);
-                    timerImage.startAnimation(animation);
-                }
-            }
-
-            @Override
-            public void onFinish() {
-                //Implement game over function
-            }
-        }.start();
+        if (!isStopWatchRunning)
+        {
+            stopWatch.setBase(SystemClock.elapsedRealtime());
+            stopWatch.start();
+            isStopWatchRunning=true;
+            timerImage.startAnimation(animation);
+        }
     }
+    protected void stopStopWatch() {
+        ImageView timerImage = (ImageView) findViewById(R.id.timerView);
+        if (isStopWatchRunning)
+        {
+            stopWatch.stop();
+            stopTime= SystemClock.elapsedRealtime()-stopWatch.getBase();
+            isStopWatchRunning=false;
+            timerImage.clearAnimation();
+        }
+    }
+
 }
