@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -102,17 +103,28 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         return imgFileList;
     }
 
-    protected boolean getImgUrlList() {
+    protected int getImgUrlList() {
         try {
             parseHTMLImgURLs();
             if (imgUrlList != null && imgUrlList.size() >= 20) {
-                return true;
-            } else {
-                return false;
-            }
+                return 1; //1 = all good
+            } else if (imgUrlList.size() < 20) {
+                return 2;
+            } else
+                return 3; //invalid url
         } catch (Exception e) {
-            return false;
+            return 3;
         }
+    }
+
+    protected void enterNewURLToast(boolean isURLValid) {
+        String msg = "";
+        if (!isURLValid)
+            msg = "Unable to parse webpage. \nPlease enter a valid URL.";
+        else
+            msg = "Insufficient images on webpage. \nPlease enter a URL with more images";
+
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 
     protected ImageDTO decodeImageIntoDTO(File DestFile, int imageID) {
@@ -143,9 +155,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     }
 
     protected void initGridView() {
-        fetchedImages = new ArrayList<>();
-        //TODO: Remove me
-        mockFetchedImages();
+        setDefaultImage();
         GridView gridView = (GridView) findViewById(R.id.fetchedImageGridView);
         adapter = new FetchedImageAdapter(this, fetchedImages);
         Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.dummy);
@@ -155,9 +165,10 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         gridView.setOnItemClickListener(listener);
     }
 
-    private void mockFetchedImages() {
-        for (int i = 0; i < 20; i++) {
-            fetchedImages.add(new ImageDTO(R.drawable.laugh, BitmapFactory.decodeResource(this.getResources(), R.drawable.laugh)));
+    private void setDefaultImage() {
+        fetchedImages = new ArrayList<>();
+        for (int i = 0; i < FETCH_IMAGES_MAX; i++) {
+            fetchedImages.add(new ImageDTO(R.drawable.unavailable, BitmapFactory.decodeResource(this.getResources(), R.drawable.unavailable)));
         }
     }
 
@@ -175,8 +186,9 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                     isDownloadThreadRunning = true; //start running, say True
 
                     imgFileList = createDestFiles(); //get twenty blank files to store
+                    int fetchURLStatusCode = getImgUrlList();
 
-                    if (getImgUrlList()) {
+                    if (fetchURLStatusCode == 1) {
                         System.out.println("All good---ImgURLList Have-" + imgUrlList.size() + " URL strings");
                         fetchedImages = new ArrayList<>();
                         for (int i = 0; i < FETCH_IMAGES_MAX; i++) {
@@ -188,7 +200,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            while(!housekeepOnDowndloadInterrupt())
+                                            while(!housekeepOnDownloadInterrupt())
                                                 ;
                                         }
                                     });
@@ -206,21 +218,33 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                             }
                         }
                         System.out.println("there are ..." + fetchedImages.size() + " imageDTO objects in fetchedImages");
-                        listener.setFetchedImages(fetchedImages);
-                        List<Boolean> list = new ArrayList<>(Arrays.asList(new Boolean[fetchedImages.size()]));
-                        Collections.fill(list, Boolean.FALSE);
-                        listener.setSelectedFlags(list);
-                        listener.setDownloadFinished(true);
+                        setUpListener();
                         isDownloadThreadRunning = false;
-                    } else
-                        System.out.println("Please try a new URL --- Cannot get images OR not enough images ");
-                    isDownloadThreadRunning = false;
-                    //interrupt thread and show error about url not working;
+                    } else {
+                        if (fetchURLStatusCode == 2) { //
+                            System.out.println(">>>> TOAST: Cannot get enough images");
+                            runOnUiThread(() -> enterNewURLToast(true));
+                        } else { // 3 = invalid URL
+                            System.out.println(">>>> TOAST: invalid URL");
+                            runOnUiThread(() -> enterNewURLToast(false));
+                        }
+
+                        isDownloadThreadRunning = false;
+                    }
                 }
             });
             downloadImageThread.start();
 
         }
+    }
+
+    private void setUpListener() {
+        listener.setFiles(imgFileList);
+        listener.setFetchedImages(fetchedImages);
+        List<Boolean> list = new ArrayList<>(Arrays.asList(new Boolean[fetchedImages.size()]));
+        Collections.fill(list, Boolean.FALSE);
+        listener.setSelectedFlags(list);
+        listener.setDownloadFinished(true);
     }
 
     public class progressUiRunnable implements Runnable {
@@ -249,9 +273,16 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         //3-  Update GridView with new image
         System.out.println("UPDATING GridView:  ==== " + numberDone);
 
+        FetchedImageAdapter fetchedImageAdapter = new FetchedImageAdapter(this, fetchedImages);
+        imageGridView = findViewById(R.id.fetchedImageGridView);
+        if(imageGridView != null){
+            imageGridView.setAdapter(fetchedImageAdapter);
+        }
+
+
     }
 
-    protected boolean housekeepOnDowndloadInterrupt() {
+    protected boolean housekeepOnDownloadInterrupt() {
         //1 - reset ProgressBar
 
 
@@ -271,7 +302,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    public class FetchedImageAdapter extends BaseAdapter {
+    public class FetchedImageAdapter extends BaseAdapter{
 
         private final Context context;
         private LayoutInflater inflater;
@@ -302,16 +333,19 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            if (convertView == null) {
+            if(convertView == null){
                 convertView = inflater.inflate(R.layout.grid_item, parent, false);
             }
 
             ImageView imageView = convertView.findViewById(R.id.gridImage);
 
-            for (ImageDTO image : fetchedImages) {
-                Bitmap bitmap = image.getBitmap();
-                imageView.setImageBitmap(bitmap);
+            Bitmap[] bitmaps = new Bitmap[20];
+
+            for(int i = 0; i < fetchedImages.size(); i++){
+                bitmaps[i] = fetchedImages.get(i).getBitmap();
             }
+
+            imageView.setImageBitmap(bitmaps[position]);
 
             return convertView;
         }

@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class PlayActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
 
@@ -63,15 +65,23 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     AlertDialog myPopUpWinDialog;
 
     //This function is just a helper method -- to be deleted
-    public void getSelectedImages() {
-        selectedImages.add(new ImageDTO(R.drawable.laugh, BitmapFactory.decodeResource(this.getResources(), R.drawable.laugh)));
-        selectedImages.add(new ImageDTO(R.drawable.peep, BitmapFactory.decodeResource(this.getResources(), R.drawable.peep)));
+    public void getSelectedImages(List<String> filePaths) {
+        if (filePaths == null || filePaths.size() == 0) {
+            // FIXME: fallback images. remove it later.
+            selectedImages.add(new ImageDTO(R.drawable.laugh, BitmapFactory.decodeResource(this.getResources(), R.drawable.laugh)));
+            selectedImages.add(new ImageDTO(R.drawable.peep, BitmapFactory.decodeResource(this.getResources(), R.drawable.peep)));
 
-        selectedImages.add(new ImageDTO(R.drawable.snore, BitmapFactory.decodeResource(this.getResources(), R.drawable.snore)));
-        selectedImages.add(new ImageDTO(R.drawable.what, BitmapFactory.decodeResource(this.getResources(), R.drawable.what)));
+            selectedImages.add(new ImageDTO(R.drawable.snore, BitmapFactory.decodeResource(this.getResources(), R.drawable.snore)));
+            selectedImages.add(new ImageDTO(R.drawable.what, BitmapFactory.decodeResource(this.getResources(), R.drawable.what)));
 
-        selectedImages.add(new ImageDTO(R.drawable.tired, BitmapFactory.decodeResource(this.getResources(), R.drawable.tired)));
-        selectedImages.add(new ImageDTO(R.drawable.stop, BitmapFactory.decodeResource(this.getResources(), R.drawable.stop)));
+            selectedImages.add(new ImageDTO(R.drawable.tired, BitmapFactory.decodeResource(this.getResources(), R.drawable.tired)));
+            selectedImages.add(new ImageDTO(R.drawable.stop, BitmapFactory.decodeResource(this.getResources(), R.drawable.stop)));
+        } else {
+            for (int i = 0; i < filePaths.size(); i++) {
+                Bitmap bitmap = BitmapFactory.decodeFile(filePaths.get(i));
+                selectedImages.add(new ImageDTO(i, bitmap));
+            }
+        }
     }
 
     public void duplicateSelectedImages() {
@@ -85,9 +95,11 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
+        Intent intent = getIntent();
+        List<String> imagePaths = intent.getStringArrayListExtra("image_paths");
+        getSelectedImages(imagePaths);
 
         //This is all to be deleted
-        getSelectedImages();
         duplicateSelectedImages();
 
         //Shuffle the images so that the grid view has no adjacent same image

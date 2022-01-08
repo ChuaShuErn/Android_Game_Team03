@@ -2,7 +2,6 @@ package iss.workshop.android_game_t3;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -11,17 +10,18 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.Serializable;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class SelectImgListener implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class SelectImgListener implements AdapterView.OnItemClickListener {
     private final AppCompatActivity currentActivity;
     private final Bitmap selectedBitmap;
-    private List<ImageDTO> fetchedImages; // change List<String> to store file's path/file name
+    private List<File> files;
+    private List<ImageDTO> fetchedImages;
     private List<Boolean> selectedFlags;
     private boolean downloadFinished;
 
@@ -29,6 +29,10 @@ public class SelectImgListener implements AdapterView.OnItemClickListener, View.
         this.currentActivity = currentActivity;
         this.selectedBitmap = selectedBitmap;
         this.downloadFinished = false;
+    }
+
+    public void setFiles(List<File> files) {
+        this.files = files;
     }
 
     public void setFetchedImages(List<ImageDTO> fetchedImages) {
@@ -64,41 +68,16 @@ public class SelectImgListener implements AdapterView.OnItemClickListener, View.
 
         int numOfSelected = Collections.frequency(selectedFlags, true);
         if (numOfSelected == 6) {
-            List<ImageDTO> selectedImages = IntStream.range(0, selectedFlags.size())
+            ArrayList<String> filePaths = IntStream.range(0, selectedFlags.size())
                     .filter(selectedFlags::get)
-                    .mapToObj(fetchedImages::get)
-                    .collect(Collectors.toList());
-
-            System.out.println("jump to game activity...");
+                    .mapToObj(i -> {
+                        File file = files.get(i);
+                        return file.getAbsolutePath();
+                    })
+                    .collect(Collectors.toCollection(ArrayList::new));
             Intent intent = new Intent(this.currentActivity, PlayActivity.class);
-            intent.putExtra("images", (Serializable) selectedImages);
+            intent.putStringArrayListExtra("image_paths", filePaths);
             this.currentActivity.startActivity(intent);
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-//        List<ImageDTO> selectedImages = IntStream.range(0, selectedFlags.size())
-//                .filter(selectedFlags::get)
-//                .mapToObj(fetchedImages::get)
-//                .collect(Collectors.toList());
-        List<ImageDTO> selectedImages = new ArrayList<>();
-        selectedImages.add(new ImageDTO(R.drawable.laugh, BitmapFactory.decodeResource(this.currentActivity.getResources(), R.drawable.laugh)));
-        selectedImages.add(new ImageDTO(R.drawable.peep, BitmapFactory.decodeResource(this.currentActivity.getResources(), R.drawable.peep)));
-
-        selectedImages.add(new ImageDTO(R.drawable.snore, BitmapFactory.decodeResource(this.currentActivity.getResources(), R.drawable.snore)));
-        selectedImages.add(new ImageDTO(R.drawable.what, BitmapFactory.decodeResource(this.currentActivity.getResources(), R.drawable.what)));
-
-        selectedImages.add(new ImageDTO(R.drawable.tired, BitmapFactory.decodeResource(this.currentActivity.getResources(), R.drawable.tired)));
-        selectedImages.add(new ImageDTO(R.drawable.stop, BitmapFactory.decodeResource(this.currentActivity.getResources(), R.drawable.stop)));
-
-        System.out.println("jump to game activity...");
-        Intent intent = new Intent(this.currentActivity, PlayActivity.class);
-        ArrayList<Bitmap> bitmaps = selectedImages
-                .stream()
-                .map(ImageDTO::getBitmap)
-                .collect(Collectors.toCollection(ArrayList::new));
-        intent.putParcelableArrayListExtra("images", bitmaps);
-        this.currentActivity.startActivity(intent);
     }
 }
