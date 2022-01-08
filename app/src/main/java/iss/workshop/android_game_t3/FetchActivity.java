@@ -98,12 +98,10 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
             parseHTMLImgURLs();
             if (imgUrlList != null && imgUrlList.size() >= 20) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -130,8 +128,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
             in.close();
             return true;
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -158,7 +155,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                             if (downloadThisImage(imgUrlList.get(i), imgFileList.get(i))) {
 
                                 //>onInterrupt() clear GridView + Progress, clear arrays to prevent overstacking
-                                if (downloadImageThread.interrupted()){
+                                if (downloadImageThread.interrupted()) {
                                     /*
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -182,10 +179,9 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                         }
                         System.out.println("there are ..." + fetchedImages.size() + " imageDTO objects in fetchedImages");
                         isDownloadThreadRunning = false;
-                    }
-                    else
+                    } else
                         System.out.println("Please try a new URL --- Cannot get images OR not enough images ");
-                        isDownloadThreadRunning = false;
+                    isDownloadThreadRunning = false;
                     //interrupt thread and show error about url not working;
                 }
             });
