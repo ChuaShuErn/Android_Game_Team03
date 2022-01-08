@@ -52,7 +52,6 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         if (fetchBtn != null)
             fetchBtn.setOnClickListener(this);
 
-
     }
 
     private void parseHTMLImgURLs() {
@@ -155,7 +154,8 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                                 fetchedImages.add(decodeImageIntoDTO(imgFileList.get(i), imgID));
                                 System.out.println("Adding fetchImages ImageDTO object ---->> No." + imgID);
 
-                                updateProgress(imgID); //update ProgressBar, ProgressText, GridView --> runUIThread
+                                runOnUiThread(new progressUiRunnable(imgID));
+
                             }
                         }
                         System.out.println("there are ..." + fetchedImages.size() + " imageDTO objects in fetchedImages");
@@ -169,7 +169,22 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public void updateProgress(int numberDone) {
+    public class progressUiRunnable implements Runnable {
+
+        protected int imgIdDone;
+
+        progressUiRunnable(int idDone) {
+            super();
+            this.imgIdDone = idDone;
+        }
+
+        @Override
+        public void run() {
+            updateProgressViews(imgIdDone);
+        }
+    }
+
+    public void updateProgressViews(int numberDone) {
 
         //1 - Update ProgressBar
         System.out.println("UPDATING PROGRESS BAR:  ==== " + numberDone);
