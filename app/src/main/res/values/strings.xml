@@ -3,4 +3,5 @@
     <string name="fetchBtn">Fetch</string>
     <string name="url_hint">Your image catalogue URL</string>
     <string name="matches">Matches</string>
+    <string name="default_search_url">https://stocksnap.io/search/food</string>
 </resources>
