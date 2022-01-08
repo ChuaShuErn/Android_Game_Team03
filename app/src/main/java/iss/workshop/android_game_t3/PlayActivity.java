@@ -3,6 +3,8 @@ package iss.workshop.android_game_t3;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AlertDialogLayout;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -55,7 +57,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     Runnable runnable;
 
     //Variables to be used in onClick (submitBtn and okBtn)
-    int score = 0;
+    int score = 6;
     String inputName = "Diego ";
     AlertDialog myPopUpWinDialog;
 
@@ -103,7 +105,6 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             public void run() {
                 image1.setImageBitmap(BitmapFactory.decodeResource(PlayActivity.this.getResources(),R.drawable.dummy));
                 image2.setImageBitmap(BitmapFactory.decodeResource(PlayActivity.this.getResources(),R.drawable.dummy));
-
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -149,7 +150,13 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             numOfSelectedImage++;
             previousPosition = position;
             image1 = (ImageView) gridElement.getChildAt(0);
-            image1.setImageBitmap(gameImages.get(position).getBitmap());
+
+            image1.animate().rotationYBy(360).rotationXBy(360).setDuration(300).withEndAction(new Runnable() {
+                @Override
+                public void run() {
+                    image1.setImageBitmap(gameImages.get(position).getBitmap());
+                }
+            });
             score--;
             clickedStartTime = System.currentTimeMillis();
         }
@@ -161,7 +168,13 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             if(gameImages.get(previousPosition).getBitmap()==gameImages.get(position).getBitmap()){
                 matchedImagePositions.add(previousPosition);
                 matchedImagePositions.add(position);
-                image2.setImageBitmap(gameImages.get(position).getBitmap());
+                image2.animate().rotationYBy(360).rotationXBy(360).setDuration(300).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        image2.setImageBitmap(gameImages.get(position).getBitmap());
+                    }
+                });
+
                 countMatchedPairs++;
                 matchText.setText(countMatchedPairs + " of " + selectedImages.size() + " images");
                 clickedEndTime = System.currentTimeMillis();
@@ -171,7 +184,12 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                     score+=3;
             }
             else{
-                image2.setImageBitmap(gameImages.get(position).getBitmap());
+                image2.animate().rotationYBy(360).rotationXBy(360).setDuration(300).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        image2.setImageBitmap(gameImages.get(position).getBitmap());
+                    }
+                });
                 handler.postDelayed(runnable, 300);
                 score--;
             }
