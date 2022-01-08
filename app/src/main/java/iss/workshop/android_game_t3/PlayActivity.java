@@ -145,7 +145,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             previousPosition = position;
             image1 = (ImageView) gridElement.getChildAt(0);
 
-            image1.animate().rotationYBy(720).rotationXBy(720).setDuration(200).withEndAction(new Runnable() {
+            image1.animate().rotationBy(360).setDuration(200).withEndAction(new Runnable() {
                 @Override
                 public void run() {
                     image1.setImageBitmap(gameImages.get(position).getBitmap());
@@ -162,7 +162,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             if (gameImages.get(previousPosition).getBitmap() == gameImages.get(position).getBitmap()) {
                 matchedImagePositions.add(previousPosition);
                 matchedImagePositions.add(position);
-                image2.animate().rotationYBy(720).rotationXBy(720).setDuration(200).withEndAction(new Runnable() {
+                image2.animate().rotationBy(360).setDuration(200).withEndAction(new Runnable() {
                     @Override
                     public void run() {
                         image2.setImageBitmap(gameImages.get(position).getBitmap());
@@ -179,7 +179,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 } else
                     score += 3;
             } else {
-                image2.animate().rotationYBy(720).rotationXBy(720).setDuration(200).withEndAction(new Runnable() {
+                image2.animate().rotationBy(360).setDuration(200).withEndAction(new Runnable() {
                     @Override
                     public void run() {
                         image2.setImageBitmap(gameImages.get(position).getBitmap());
