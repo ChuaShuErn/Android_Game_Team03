@@ -15,15 +15,15 @@
         <activity
             android:name=".LeaderboardActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity"/>
+            />
         <activity
             android:name=".PlayActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity"/>
+            />
         <activity
             android:name=".FetchActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity"/>
+            />
         <activity
             android:name=".MainActivity"
             android:exported="true">

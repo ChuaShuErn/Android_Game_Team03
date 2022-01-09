@@ -1,5 +1,7 @@
 package iss.workshop.android_game_t3;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -101,7 +103,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_play);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mActivity = PlayActivity.this;
         Intent intent = getIntent();
@@ -183,11 +185,14 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             numOfSelectedImage++;
             previousPosition = position;
             image1 = (ImageView) gridElement.getChildAt(0);
+            image1.setRotationY(0f);
+            image1.animate().rotationY(90f).setDuration(150).setListener(new AnimatorListenerAdapter() {
 
-            image1.animate().rotationBy(360).setDuration(150).withEndAction(new Runnable() {
                 @Override
-                public void run() {
+                    public void onAnimationEnd(Animator animation){
                     image1.setImageBitmap(gameImages.get(position).getBitmap());
+                    image1.setRotationY(270f);
+                    image1.animate().rotationY(360f).setListener(null);
                 }
             });
             clickedStartTime = System.currentTimeMillis();
@@ -200,10 +205,14 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             if (gameImages.get(previousPosition).getBitmap() == gameImages.get(position).getBitmap()) {
                 matchedImagePositions.add(previousPosition);
                 matchedImagePositions.add(position);
-                image2.animate().rotationBy(360).setDuration(150).withEndAction(new Runnable() {
+                //image2.animate().rotationBy(360).setDuration(150).withEndAction(new Runnable() {
+                image2.setRotationY(0f);
+                image2.animate().rotationY(90f).setDuration(150).setListener(new AnimatorListenerAdapter() {
                     @Override
-                    public void run() {
+                    public void onAnimationEnd(Animator animation) {
                         image2.setImageBitmap(gameImages.get(position).getBitmap());
+                        image2.setRotationY(270f);
+                        image2.animate().rotationY(360f).setListener(null);
                         image1.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
                         image2.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
                     }
@@ -217,14 +226,19 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 else if ((clickedEndTime - clickedStartTime) <= 5000) score += 7;//Clicked the correct paired within 5 seconds
                 else score += 5;
             } else {
-                image2.animate().rotationBy(360).setDuration(150).withEndAction(new Runnable() {
+
+                image2.setRotationY(0f);
+                image2.animate().rotationY(90f).setDuration(150).setListener(new AnimatorListenerAdapter() {
                     @Override
-                    public void run() {
+                    public void onAnimationEnd(Animator animation) {
                         image2.setImageBitmap(gameImages.get(position).getBitmap());
+                        image2.setRotationY(270f);
+                        image2.animate().rotationY(360f).setListener(null);
                         image1.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
                         image2.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
                     }
                 });
+
                 handler.postDelayed(runnable, 499);
                 mLastClickTime = SystemClock.elapsedRealtime();
                 score %= 19;
@@ -234,7 +248,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             if (countMatchedPairs == selectedImages.size()) {
                 stopStopWatch();
                 //Calculating the final score
-                if (stopTime<=15000) score*=54;
+                if (stopTime<=15000) score*=54; //finish before 15s
                 else if (stopTime<=20000) score*=45;
                 else if (stopTime<=25000) score*=36;
                 else if (stopTime<=30000) score*=27;
