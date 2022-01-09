@@ -172,7 +172,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             previousPosition = position;
             image1 = (ImageView) gridElement.getChildAt(0);
 
-            image1.animate().rotationBy(360).setDuration(150).withEndAction(new Runnable() {
+            image1.animate().rotationBy(360).setDuration(80).withEndAction(new Runnable() {
                 @Override
                 public void run() {
                     image1.setImageBitmap(gameImages.get(position).getBitmap());
@@ -188,7 +188,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             if (gameImages.get(previousPosition).getBitmap() == gameImages.get(position).getBitmap()) {
                 matchedImagePositions.add(previousPosition);
                 matchedImagePositions.add(position);
-                image2.animate().rotationBy(360).setDuration(150).withEndAction(new Runnable() {
+                image2.animate().rotationBy(360).setDuration(80).withEndAction(new Runnable() {
                     @Override
                     public void run() {
                         image2.setImageBitmap(gameImages.get(position).getBitmap());
@@ -205,7 +205,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 else if ((clickedEndTime - clickedStartTime) <= 5000) score += 7;//Clicked the correct paired within 5 seconds
                 else score += 5;
             } else {
-                image2.animate().rotationBy(360).setDuration(150).withEndAction(new Runnable() {
+                image2.animate().rotationBy(360).setDuration(80).withEndAction(new Runnable() {
                     @Override
                     public void run() {
                         image2.setImageBitmap(gameImages.get(position).getBitmap());
@@ -213,7 +213,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                         image2.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
                     }
                 });
-                handler.postDelayed(runnable, 300);
+                handler.postDelayed(runnable, 299);
                 score %= 19;
             }
 
