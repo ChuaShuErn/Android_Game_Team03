@@ -1,5 +1,6 @@
 package iss.workshop.android_game_t3;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -16,6 +17,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -67,16 +69,20 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_fetch);
         myDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
-        String[] exampleURLs =
-                     {  "https://stocksnap.io/search/spring",
-                        "https://stocksnap.io/search/food",
-                        "https://stocksnap.io/search/happy",
-                        "https://stocksnap.io/search/travel",
-                        "https://www.google.com",
-                        "https://invalid_website.com" };
+        ArrayList<String> exampleURLs = new ArrayList<String> (){
+            {
+                add("https://stocksnap.io/search/spring");
+                add("https://stocksnap.io/search/food");
+                add("https://stocksnap.io/search/happy");
+                add("https://stocksnap.io/search/travel");
+                add("https://www.google.com");
+                add("https://invalid_website.com");
+            };
+        };
+
 
         ArrayAdapter<String> urlAdapter =
-                new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, exampleURLs);
+                new ArrayAdapter(this,android.R.layout.simple_list_item_1, exampleURLs);
 
         urlSearchBar = findViewById(R.id.urlSearchBar);
         urlSearchBar.setFocusableInTouchMode(true);
