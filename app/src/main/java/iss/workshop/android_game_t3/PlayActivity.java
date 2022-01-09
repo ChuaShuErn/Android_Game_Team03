@@ -101,6 +101,8 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_play);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mActivity = PlayActivity.this;
         Intent intent = getIntent();
         List<String> imagePaths = intent.getStringArrayListExtra("image_paths");
