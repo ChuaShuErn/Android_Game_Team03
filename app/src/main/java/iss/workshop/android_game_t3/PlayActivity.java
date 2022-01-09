@@ -54,6 +54,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     TextView matchText;
     private long clickedStartTime;
     private long clickedEndTime;
+    private long mLastClickTime = 0;
 
     //-- Variables to be used for threads
     Handler handler;
@@ -145,6 +146,11 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     @SuppressLint("SetTextI18n")
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //Prevent the user to click another image before the animation ends.
+        if (SystemClock.elapsedRealtime() - mLastClickTime < 300){
+            return;
+        }
+        mLastClickTime = SystemClock.elapsedRealtime();
 
         GridView gridView = findViewById(R.id.gameGridView);
         ViewGroup gridElement = (ViewGroup) gridView.getChildAt(position);
@@ -166,13 +172,12 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             previousPosition = position;
             image1 = (ImageView) gridElement.getChildAt(0);
 
-            image1.animate().rotationBy(360).setDuration(200).withEndAction(new Runnable() {
+            image1.animate().rotationBy(360).setDuration(80).withEndAction(new Runnable() {
                 @Override
                 public void run() {
                     image1.setImageBitmap(gameImages.get(position).getBitmap());
                 }
             });
-            score--;
             clickedStartTime = System.currentTimeMillis();
         }
         //This code handles the second image click
@@ -183,7 +188,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             if (gameImages.get(previousPosition).getBitmap() == gameImages.get(position).getBitmap()) {
                 matchedImagePositions.add(previousPosition);
                 matchedImagePositions.add(position);
-                image2.animate().rotationBy(360).setDuration(200).withEndAction(new Runnable() {
+                image2.animate().rotationBy(360).setDuration(80).withEndAction(new Runnable() {
                     @Override
                     public void run() {
                         image2.setImageBitmap(gameImages.get(position).getBitmap());
@@ -200,7 +205,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 else if ((clickedEndTime - clickedStartTime) <= 5000) score += 7;//Clicked the correct paired within 5 seconds
                 else score += 5;
             } else {
-                image2.animate().rotationBy(360).setDuration(200).withEndAction(new Runnable() {
+                image2.animate().rotationBy(360).setDuration(80).withEndAction(new Runnable() {
                     @Override
                     public void run() {
                         image2.setImageBitmap(gameImages.get(position).getBitmap());
@@ -208,7 +213,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                         image2.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
                     }
                 });
-                handler.postDelayed(runnable, 500);
+                handler.postDelayed(runnable, 299);
                 score %= 19;
             }
 
