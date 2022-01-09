@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,6 +66,17 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         myDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
         urlSearchBar = findViewById(R.id.urlSearchBar);
+        urlSearchBar.setFocusableInTouchMode(true);
+        urlSearchBar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (!b) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(urlSearchBar.getWindowToken(), 0);
+                }
+            }
+        });
+
         fetchBtn = findViewById(R.id.fetchBtn);
         if (fetchBtn != null)
             fetchBtn.setOnClickListener(this);
@@ -184,10 +196,16 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) { //this onClick will be the Fetch btn
         if (view != null) {
-            mURL = urlSearchBar.getText().toString();
+
+
             if (isDownloadThreadRunning == true && downloadImageThread != null) {
                 downloadImageThread.interrupt();
+                isDownloadThreadRunning = false;
+                initGridView();
             }
+
+            mURL = urlSearchBar.getText().toString();
+            urlSearchBar.clearFocus();
 
             downloadImageThread = new Thread(new Runnable() {
                 @Override
@@ -205,15 +223,6 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
                                 //>onInterrupt() clear GridView + Progress, clear arrays to prevent overstacking
                                 if (downloadImageThread.interrupted()) {
-                                    /*
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            while(!housekeepOnDownloadInterrupt())
-                                                ;
-                                        }
-                                    });
-                                    */
                                     isDownloadThreadRunning = false;
                                     return;
                                 }
@@ -228,7 +237,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                         }
                         System.out.println("there are ..." + fetchedImages.size() + " imageDTO objects in fetchedImages");
                         setUpListener();
-                        isDownloadThreadRunning = false;
+
                     } else {
                         if (fetchURLStatusCode == 2) { //
                             System.out.println(">>>> TOAST: Cannot get enough images");
@@ -238,10 +247,12 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                             runOnUiThread(() -> enterNewURLToast(false));
                         }
 
-                        isDownloadThreadRunning = false;
                     }
+
+                    isDownloadThreadRunning = false;
                 }
             });
+
             downloadImageThread.start();
 
         }
@@ -276,7 +287,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         System.out.println("UPDATING PROGRESS BAR:  ==== " + numberDone);
 
         progressBar.setVisibility(View.VISIBLE);
-        progressBar.incrementProgressBy(5);
+        progressBar.setProgress(5*numberDone);
         Integer progress = progressBar.getProgress();
 
         //2 - Update Progress Text
@@ -284,9 +295,9 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
         String loadingText = "Downloading " + progress / 5 + " of 20 images";
         if(progress == 100){
-            loadingText = "Download completed";
+            loadingText = "Download completed. \nSelect 6 images to start game!";
 
-            Toast.makeText(FetchActivity.this, "Select 6 images to start game!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(FetchActivity.this, "Select 6 images to start game!", Toast.LENGTH_LONG).show();
         }
         progressText.setText(loadingText);
 
@@ -299,18 +310,10 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
             imageGridView.setAdapter(fetchedImageAdapter);
         }
 
-
     }
 
+
     protected boolean housekeepOnDownloadInterrupt() {
-        //1 - reset ProgressBar
-
-
-        System.out.println("++++++Reset PROGRESS BAR after interrupt +++++ ");
-
-
-        //2 - Update Progress Text
-        System.out.println("++++++Reset PROGRESS Text after interrupt +++++ ");
 
         //3-  Update GridView with new image
         System.out.println("++++++Reset GridView after interrupt +++++ ");
@@ -319,7 +322,6 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         imgFileList = null;
 
         return true;
-
     }
 
     public class FetchedImageAdapter extends BaseAdapter{
