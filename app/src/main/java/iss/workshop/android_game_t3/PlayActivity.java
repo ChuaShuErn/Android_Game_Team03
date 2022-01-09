@@ -9,6 +9,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -38,6 +39,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private final ArrayList<ImageDTO> selectedImages = new ArrayList<>();
     private final ArrayList<ImageDTO> gameImages = new ArrayList<>();
+    private Activity mActivity;
 
     //---This variables are used in the run-up timer
     private Chronometer stopWatch;
@@ -64,6 +66,8 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     int score = 0;
     EditText inputName;
     AlertDialog myPopUpWinDialog;
+    AlertDialog myPopUpResetDialog;
+    Button resetBtn;
 
     //This function is just a helper method -- to be deleted
     public void getSelectedImages(List<String> filePaths) {
@@ -95,7 +99,9 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_play);
+        mActivity = PlayActivity.this;
         Intent intent = getIntent();
         List<String> imagePaths = intent.getStringArrayListExtra("image_paths");
         getSelectedImages(imagePaths);
@@ -110,6 +116,8 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         initGridView();
         startStopWatch();
         initMatchView();
+        initResetBtn();
+
 
 
         //This is a thread to change displayed images back to dummy when there is no match
@@ -146,8 +154,12 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     @SuppressLint("SetTextI18n")
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
         //Prevent the user to click on another image before the animation ends.
         if (SystemClock.elapsedRealtime() - mLastClickTime < 500) return;
+
+
 
 
         GridView gridView = findViewById(R.id.gameGridView);
@@ -315,6 +327,57 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             Intent intent = new Intent(this, LeaderboardActivity.class);
             startActivity(intent);
 
+        }
+        if (id == R.id.resetGameBtn){
+            PopUpReset();
+        }
+
+        if (id == R.id.playAgainBtn){
+            //restart activity
+            restartActivity(mActivity);
+
+        }
+
+    }
+    public void PopUpReset(){
+        //Inflate PopUpLose layout in a view
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        View myPopUpLose = inflater.inflate(R.layout.pop_up_reset, null, false);
+
+        //putting view into a pop-up
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(myPopUpLose);
+        builder.setCancelable(false);
+        myPopUpResetDialog = builder.create();
+
+        //display Text and buttons
+
+        final Button playAgainBtn = myPopUpLose.findViewById(R.id.playAgainBtn);
+
+        //set Listener
+        if(playAgainBtn != null){
+            playAgainBtn.setOnClickListener(this);
+        }
+        myPopUpResetDialog.show();
+
+
+
+    }
+
+    public void initResetBtn(){
+        resetBtn = findViewById(R.id.resetGameBtn);
+        if (resetBtn != null){
+            resetBtn.setOnClickListener(this);
+        }
+
+    }
+    public void restartActivity(Activity activity){
+        if (Build.VERSION.SDK_INT >= 11){
+            activity.recreate();
+        }
+        else{
+            activity.finish();
+            activity.startActivity(activity.getIntent());
         }
     }
 

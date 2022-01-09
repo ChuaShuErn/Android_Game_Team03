@@ -4,4 +4,10 @@
     <string name="url_hint">Your image catalogue URL</string>
     <string name="matches">Matches</string>
     <string name="default_search_url">https://stocksnap.io/search/food</string>
+    <string name="Lose">Sorry, you took too much time!</string>
+    <string name="BackToHome">Back to Home</string>
+    <string name="play_again">Play again</string>
+    <string name="Speed">Speed is Key! Are you ready?</string>
+    <string name="LetsGo">Let\'s Go!</string>
+    <string name="reset">Reset</string>
 </resources>
