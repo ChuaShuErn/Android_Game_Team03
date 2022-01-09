@@ -250,12 +250,13 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                     imgFileList = createDestFiles(); //get twenty blank files to store
                     int fetchURLStatusCode = getImgUrlList();
 
-                    runOnUiThread(new progressUiRunnable(0));
+
 
                     if (fetchURLStatusCode == 1) {
                         System.out.println("All good---ImgURLList Have-" + imgUrlList.size() + " URL strings");
                         fetchedImages = new ArrayList<>();
                         Collections.shuffle(imgUrlList);
+                        runOnUiThread(new progressUiRunnable(0));
 
                         while (fetchedImages.size() < FETCH_IMAGES_MAX) {
                             if (Thread.interrupted()) {
