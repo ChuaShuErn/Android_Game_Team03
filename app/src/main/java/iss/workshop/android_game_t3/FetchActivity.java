@@ -77,7 +77,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                 add("https://stocksnap.io/search/travel");
                 add("https://www.google.com");
                 add("https://invalid_website.com");
-            };
+            }
         };
 
 
@@ -124,7 +124,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                 System.out.println(u);
 
         } catch (IOException e) {
-            imgUrlList = null;;
+            imgUrlList = null;
         }
 
     }
@@ -151,7 +151,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
             } else
                 return 3;
         } catch (Exception e) {
-            if (mURL.isEmpty() || mURL == null || mURL.trim().isEmpty())
+            if (mURL.isEmpty() || mURL.trim().isEmpty())
                 return 4; //invalid url
             return 3;
         }
@@ -218,28 +218,26 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    protected void resetGridView() {
+        GridView gridView = (GridView) findViewById(R.id.fetchedImageGridView);
+        adapter = new FetchedImageAdapter(this, fetchedImages);
+        listener = new SelectImgListener(this);
+
+        gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(listener);
+
+        //progressBar.setVisibility(View.INVISIBLE);
+        //progressText.setText("");
+    }
+
     @Override
     public void onClick(View view) { //this onClick will be the Fetch btn
         if (view != null) {
 
-
-            boolean cleanup_wait = false;
-
-            if (isDownloadThreadRunning == true && downloadImageThread != null) {
+            if (isDownloadThreadRunning && downloadImageThread != null) {
                 downloadImageThread.interrupt();
-
-                downloadImageThread = null;
                 isDownloadThreadRunning = false;
-                housekeepOnDownloadInterrupt();
-                initGridView();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
             }
-
 
             urlSearchBar.clearFocus();
 
@@ -247,36 +245,37 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void run() {
                     isDownloadThreadRunning = true; //start running, say True
-
                     mURL = urlSearchBar.getText().toString();
 
-                    runOnUiThread(new progressUiRunnable(0));
                     imgFileList = createDestFiles(); //get twenty blank files to store
                     int fetchURLStatusCode = getImgUrlList();
+
+                    runOnUiThread(new progressUiRunnable(0));
 
                     if (fetchURLStatusCode == 1) {
                         System.out.println("All good---ImgURLList Have-" + imgUrlList.size() + " URL strings");
                         fetchedImages = new ArrayList<>();
                         Collections.shuffle(imgUrlList);
 
+                        while (fetchedImages.size() < FETCH_IMAGES_MAX) {
+                            if (Thread.interrupted()) {
+                                runOnUiThread(() -> {
+                                    housekeepOnDownloadInterrupt();
+                                    resetGridView();
+                                });
+                                return;
+                            }
 
-                        for (int i = 0; i < FETCH_IMAGES_MAX; i++) {
-                            if (downloadThisImage(imgUrlList.get(i), imgFileList.get(i))) {
-
-                                //>onInterrupt() clear GridView + Progress, clear arrays to prevent overstacking
-                                if (downloadImageThread.interrupted()) {
-                                    isDownloadThreadRunning = false;
-                                    mURL = "";
-                                    return;
-                                }
-                                else
-                                {
+                            else {
+                                int i = fetchedImages.size();
+                                if (downloadThisImage(imgUrlList.get(i), imgFileList.get(i))) {
                                     int imgID = i + 1;
                                     fetchedImages.add(decodeImageIntoDTO(imgFileList.get(i), imgID));
-                                    System.out.println("Adding fetchImages ImageDTO object ---->> No." + imgID);
-                                    runOnUiThread(new progressUiRunnable(imgID));
-                                }
 
+                                    System.out.println("Adding fetchImages ImageDTO object ---->> No." + fetchedImages.size());
+
+                                    runOnUiThread(new progressUiRunnable(fetchedImages.size()));
+                                }
                             }
                         }
                         System.out.println("there are ..." + fetchedImages.size() + " imageDTO objects in fetchedImages");
@@ -284,20 +283,16 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
                     } else {
                         if (fetchURLStatusCode == 2) { //
-                            System.out.println(">>>> TOAST: Cannot get enough images");
                             runOnUiThread(() -> enterNewURLToast(2));
                         } else if  (fetchURLStatusCode == 3 ) { // 3 = invalid URL
-                            System.out.println(">>>> TOAST: invalid URL");
                             runOnUiThread(() -> enterNewURLToast(3));
                         } else { // 3 = invalid URL
-                            System.out.println(">>>> TOAST: invalid URL");
                             runOnUiThread(() -> enterNewURLToast(4));
                         }
 
                     }
 
                     isDownloadThreadRunning = false;
-                    mURL = "";
                 }
             });
 
