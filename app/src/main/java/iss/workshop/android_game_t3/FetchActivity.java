@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,7 +52,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     private Thread downloadImageThread;
 
     //View attributes
-    private EditText urlSearchBar;
+    private AutoCompleteTextView urlSearchBar;
     private Button fetchBtn;
     private GridView imageGridView;
     private SelectImgListener listener;
@@ -65,6 +67,17 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_fetch);
         myDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
+        String[] exampleURLs =
+                     {  "https://stocksnap.io/search/spring",
+                        "https://stocksnap.io/search/food",
+                        "https://stocksnap.io/search/happy",
+                        "https://stocksnap.io/search/travel",
+                        "https://www.google.com",
+                        "https://invalid_website.com" };
+
+        ArrayAdapter<String> urlAdapter =
+                new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, exampleURLs);
+
         urlSearchBar = findViewById(R.id.urlSearchBar);
         urlSearchBar.setFocusableInTouchMode(true);
         urlSearchBar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -76,6 +89,8 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
         });
+        urlSearchBar.setThreshold(1);
+        urlSearchBar.setAdapter(urlAdapter);
 
         fetchBtn = findViewById(R.id.fetchBtn);
         if (fetchBtn != null)
@@ -87,9 +102,9 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     private void parseHTMLImgURLs() {
 
         try {
+            ArrayList<String> thisImgUrlList = new ArrayList<>();
             Document doc = Jsoup.connect(mURL).get();
             Elements links = doc.select("img[src]");
-            ArrayList<String> thisImgUrlList = new ArrayList<>();
             for (Element link : links) {
                 if (link.attr("src").contains(".jpg") && link.attr("src").contains("https://")
                         && !link.attr("src").contains("?")) {
@@ -103,7 +118,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                 System.out.println(u);
 
         } catch (IOException e) {
-            ArrayList<String> thisImgUrlList = null;
+            imgUrlList = null;;
         }
 
     }
@@ -127,11 +142,11 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                 return 1; //1 = all good
             } else if (imgUrlList.size() < 20) {
                 return 2;
-            } else if (mURL.isEmpty() || mURL == null || mURL.trim().isEmpty())
-                return 4; //invalid url
-            else
+            } else
                 return 3;
         } catch (Exception e) {
+            if (mURL.isEmpty() || mURL == null || mURL.trim().isEmpty())
+                return 4; //invalid url
             return 3;
         }
     }
@@ -208,9 +223,8 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                 initGridView();
             }
 
-            mURL = null;
+
             urlSearchBar.clearFocus();
-            mURL = urlSearchBar.getText().toString();
 
 
             downloadImageThread = new Thread(new Runnable() {
@@ -218,12 +232,18 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                 public void run() {
                     isDownloadThreadRunning = true; //start running, say True
 
+
+                    mURL = urlSearchBar.getText().toString();
+
+                    runOnUiThread(new progressUiRunnable(0));
                     imgFileList = createDestFiles(); //get twenty blank files to store
                     int fetchURLStatusCode = getImgUrlList();
 
                     if (fetchURLStatusCode == 1) {
                         System.out.println("All good---ImgURLList Have-" + imgUrlList.size() + " URL strings");
                         fetchedImages = new ArrayList<>();
+
+
                         for (int i = 0; i < FETCH_IMAGES_MAX; i++) {
                             if (downloadThisImage(imgUrlList.get(i), imgFileList.get(i))) {
 

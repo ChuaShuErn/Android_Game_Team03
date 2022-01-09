@@ -12,7 +12,7 @@
         android:padding="10dp"
         android:orientation="horizontal">
 
-        <EditText
+        <!--<EditText
             android:id="@+id/urlSearchBar"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -20,7 +20,15 @@
             android:text="@string/default_search_url"
             android:hint="@string/url_hint"
             android:textSize="15sp"
-             />
+             /> -->
+        <AutoCompleteTextView
+            android:id="@+id/urlSearchBar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.85"
+            android:hint="@string/url_hint"
+            android:textSize="15sp"/>
+
 
 
         <Button
