@@ -64,7 +64,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fetch);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         myDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
         ArrayList<String> exampleURLs = new ArrayList<String> (){

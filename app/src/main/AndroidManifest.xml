@@ -14,16 +14,13 @@
         android:theme="@style/Theme.Android_Game_T3">
         <activity
             android:name=".LeaderboardActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".PlayActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".FetchActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

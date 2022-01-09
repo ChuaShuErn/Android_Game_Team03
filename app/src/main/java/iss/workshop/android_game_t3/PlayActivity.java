@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -103,7 +104,6 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_play);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mActivity = PlayActivity.this;
         Intent intent = getIntent();
@@ -121,7 +121,6 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         startStopWatch();
         initMatchView();
         initResetBtn();
-
 
 
         //This is a thread to change displayed images back to dummy when there is no match
@@ -145,6 +144,21 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         };
     }
 
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Exit Game")
+                .setMessage("Are you sure you want to exit the game?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        Intent intent = new Intent(PlayActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                }).create().show();
+    }
+
     protected void initGridView() {
         GridView gridView = (GridView) findViewById(R.id.gameGridView);
         ImageAdapter imageAdapter = new ImageAdapter(this);
@@ -161,9 +175,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         //Prevent the user to click on another image before the animation ends.
-        if (SystemClock.elapsedRealtime() - mLastClickTime < 500) return;
-
-
+        if (SystemClock.elapsedRealtime() - mLastClickTime < 600) return;
 
 
         GridView gridView = findViewById(R.id.gameGridView);
@@ -187,9 +199,8 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             image1 = (ImageView) gridElement.getChildAt(0);
             image1.setRotationY(0f);
             image1.animate().rotationY(90f).setDuration(150).setListener(new AnimatorListenerAdapter() {
-
                 @Override
-                    public void onAnimationEnd(Animator animation){
+                public void onAnimationEnd(Animator animation) {
                     image1.setImageBitmap(gameImages.get(position).getBitmap());
                     image1.setRotationY(270f);
                     image1.animate().rotationY(360f).setListener(null);
@@ -205,7 +216,6 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             if (gameImages.get(previousPosition).getBitmap() == gameImages.get(position).getBitmap()) {
                 matchedImagePositions.add(previousPosition);
                 matchedImagePositions.add(position);
-                //image2.animate().rotationBy(360).setDuration(150).withEndAction(new Runnable() {
                 image2.setRotationY(0f);
                 image2.animate().rotationY(90f).setDuration(150).setListener(new AnimatorListenerAdapter() {
                     @Override
@@ -222,8 +232,10 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 matchText.setText(countMatchedPairs + " of " + selectedImages.size() + " images");
                 //Calculating the score
                 clickedEndTime = System.currentTimeMillis();
-                if ((clickedEndTime - clickedStartTime) <= 3000) score+=9; //Clicked the correct paired within 3 seconds
-                else if ((clickedEndTime - clickedStartTime) <= 5000) score += 7;//Clicked the correct paired within 5 seconds
+                if ((clickedEndTime - clickedStartTime) <= 3000)
+                    score += 9; //Clicked the correct paired within 3 seconds
+                else if ((clickedEndTime - clickedStartTime) <= 5000)
+                    score += 7;//Clicked the correct paired within 5 seconds
                 else score += 5;
             } else {
 
@@ -239,7 +251,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                 });
 
-                handler.postDelayed(runnable, 499);
+                handler.postDelayed(runnable, 599);
                 mLastClickTime = SystemClock.elapsedRealtime();
                 score %= 19;
             }
@@ -248,13 +260,13 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             if (countMatchedPairs == selectedImages.size()) {
                 stopStopWatch();
                 //Calculating the final score
-                if (stopTime<=15000) score*=54; //finish before 15s
-                else if (stopTime<=20000) score*=45;
-                else if (stopTime<=25000) score*=36;
-                else if (stopTime<=30000) score*=27;
-                else if (stopTime<=40000) score*=18;
-                else if (stopTime<=55000) score*=9;
-                else score*=3;
+                if (stopTime <= 15000) score *= 54; //finish before 15s
+                else if (stopTime <= 20000) score *= 45;
+                else if (stopTime <= 25000) score *= 36;
+                else if (stopTime <= 30000) score *= 27;
+                else if (stopTime <= 40000) score *= 18;
+                else if (stopTime <= 55000) score *= 9;
+                else score *= 3;
                 Toast.makeText(getApplicationContext(), "You win!", Toast.LENGTH_SHORT).show();
                 PopUpWin();
             }
@@ -299,8 +311,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (inputName.getText().toString().length() == 0) {
                     if (submitBtn != null)
                         submitBtn.setEnabled(false); //disable submit button when inputName empty
-                } else
-                    if (submitBtn != null)
+                } else if (submitBtn != null)
                     submitBtn.setEnabled(true);
             }
 
@@ -321,19 +332,19 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onClick(View view) {
         int id = view.getId();
 
-        if(id == R.id.submitBtn){
+        if (id == R.id.submitBtn) {
             //edit the share pre
             final SharedPreferences pref = getSharedPreferences("Leaderboard", MODE_PRIVATE);//initialize players.xml
 
             int i = 0;
             //to detect last player inside player.xml
-            while(pref.contains("player"+i)) {
+            while (pref.contains("player" + i)) {
                 i++;
             }
 
             SharedPreferences.Editor editor = pref.edit();
-            editor.putString("player"+i,inputName.getText().toString());//add nth player
-            editor.putInt("score"+i,score); //add nth player's score
+            editor.putString("player" + i, inputName.getText().toString());//add nth player
+            editor.putInt("score" + i, score); //add nth player's score
             editor.commit();
             //data/data/iss.workshop.android_game_t3/shared_prefs/Leaderboard.xml -->check shared pref here
 
@@ -344,18 +355,19 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             startActivity(intent);
 
         }
-        if (id == R.id.resetGameBtn){
+        if (id == R.id.resetGameBtn) {
             PopUpReset();
         }
 
-        if (id == R.id.playAgainBtn){
+        if (id == R.id.playAgainBtn) {
             //restart activity
             restartActivity(mActivity);
 
         }
 
     }
-    public void PopUpReset(){
+
+    public void PopUpReset() {
         //Inflate PopUpLose layout in a view
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         View myPopUpLose = inflater.inflate(R.layout.pop_up_reset, null, false);
@@ -371,27 +383,26 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         final Button playAgainBtn = myPopUpLose.findViewById(R.id.playAgainBtn);
 
         //set Listener
-        if(playAgainBtn != null){
+        if (playAgainBtn != null) {
             playAgainBtn.setOnClickListener(this);
         }
         myPopUpResetDialog.show();
 
 
-
     }
 
-    public void initResetBtn(){
+    public void initResetBtn() {
         resetBtn = findViewById(R.id.resetGameBtn);
-        if (resetBtn != null){
+        if (resetBtn != null) {
             resetBtn.setOnClickListener(this);
         }
 
     }
-    public void restartActivity(Activity activity){
-        if (Build.VERSION.SDK_INT >= 11){
+
+    public void restartActivity(Activity activity) {
+        if (Build.VERSION.SDK_INT >= 11) {
             activity.recreate();
-        }
-        else{
+        } else {
             activity.finish();
             activity.startActivity(activity.getIntent());
         }
@@ -406,24 +417,23 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     protected void startStopWatch() {
-        stopWatch=findViewById(R.id.chronometer);
+        stopWatch = findViewById(R.id.chronometer);
         ImageView timerImage = (ImageView) findViewById(R.id.timerView);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.shake);
-        if (!isStopWatchRunning)
-        {
+        if (!isStopWatchRunning) {
             stopWatch.setBase(SystemClock.elapsedRealtime());
             stopWatch.start();
-            isStopWatchRunning=true;
+            isStopWatchRunning = true;
             timerImage.startAnimation(animation);
         }
     }
+
     protected void stopStopWatch() {
         ImageView timerImage = (ImageView) findViewById(R.id.timerView);
-        if (isStopWatchRunning)
-        {
+        if (isStopWatchRunning) {
             stopWatch.stop();
-            stopTime= SystemClock.elapsedRealtime()-stopWatch.getBase();
-            isStopWatchRunning=false;
+            stopTime = SystemClock.elapsedRealtime() - stopWatch.getBase();
+            isStopWatchRunning = false;
             timerImage.clearAnimation();
         }
     }
