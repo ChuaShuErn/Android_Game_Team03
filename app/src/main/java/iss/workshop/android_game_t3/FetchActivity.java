@@ -127,19 +127,23 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                 return 1; //1 = all good
             } else if (imgUrlList.size() < 20) {
                 return 2;
-            } else
-                return 3; //invalid url
+            } else if (mURL.isEmpty() || mURL == null || mURL.trim().isEmpty())
+                return 4; //invalid url
+            else
+                return 3;
         } catch (Exception e) {
             return 3;
         }
     }
 
-    protected void enterNewURLToast(boolean isURLValid) {
+    protected void enterNewURLToast(int errorCode) {
         String msg = "";
-        if (!isURLValid)
+        if (errorCode == 2)
+            msg = "Insufficient images on webpage. \nPlease enter a URL with more images";
+        else if (errorCode == 3)
             msg = "Unable to parse webpage. \nPlease enter a valid URL.";
         else
-            msg = "Insufficient images on webpage. \nPlease enter a URL with more images";
+            msg = "URL field cannot be blank. \nPlease enter a URL";
 
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
@@ -204,8 +208,10 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                 initGridView();
             }
 
-            mURL = urlSearchBar.getText().toString();
+            mURL = null;
             urlSearchBar.clearFocus();
+            mURL = urlSearchBar.getText().toString();
+
 
             downloadImageThread = new Thread(new Runnable() {
                 @Override
@@ -224,6 +230,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                                 //>onInterrupt() clear GridView + Progress, clear arrays to prevent overstacking
                                 if (downloadImageThread.interrupted()) {
                                     isDownloadThreadRunning = false;
+                                    mURL = "";
                                     return;
                                 }
 
@@ -241,15 +248,19 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                     } else {
                         if (fetchURLStatusCode == 2) { //
                             System.out.println(">>>> TOAST: Cannot get enough images");
-                            runOnUiThread(() -> enterNewURLToast(true));
+                            runOnUiThread(() -> enterNewURLToast(2));
+                        } else if  (fetchURLStatusCode == 3 ) { // 3 = invalid URL
+                            System.out.println(">>>> TOAST: invalid URL");
+                            runOnUiThread(() -> enterNewURLToast(3));
                         } else { // 3 = invalid URL
                             System.out.println(">>>> TOAST: invalid URL");
-                            runOnUiThread(() -> enterNewURLToast(false));
+                            runOnUiThread(() -> enterNewURLToast(4));
                         }
 
                     }
 
                     isDownloadThreadRunning = false;
+                    mURL = "";
                 }
             });
 
