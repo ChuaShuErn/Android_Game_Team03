@@ -11,6 +11,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -70,6 +71,10 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     AlertDialog myPopUpWinDialog;
     AlertDialog myPopUpResetDialog;
     Button resetBtn;
+
+    //Variables for media player
+    MediaPlayer mediaPlayer;
+    private float max = 1.0f;
 
     //This function is just a helper method -- to be deleted
     public void getSelectedImages(List<String> filePaths) {
@@ -227,6 +232,9 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 else if ((timeTakenToClickBothImage) <= 5000)
                     score += 7;//Clicked the correct paired within 5 seconds
                 else score += 5;
+
+                //Play music
+                playMatch();
             } else {
 
                 image2.setRotationY(0f);
@@ -244,6 +252,9 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 handler.postDelayed(runnable, 599);
                 mLastClickTime = SystemClock.elapsedRealtime();
                 score %= 19;
+
+                //Play music
+                playUnMatch();
             }
 
             //If the number of matched images is same as selected image display winner
@@ -420,5 +431,16 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             isStopWatchRunning = false;
             timerImage.clearAnimation();
         }
+    }
+
+    public void playMatch(){
+        mediaPlayer = MediaPlayer.create(this, R.raw.correct);
+        mediaPlayer.setVolume(max,max);
+        mediaPlayer.start();
+    }
+    public void playUnMatch(){
+        mediaPlayer = MediaPlayer.create(this, R.raw.wrong);
+        mediaPlayer.setVolume(max,max);
+        mediaPlayer.start();
     }
 }

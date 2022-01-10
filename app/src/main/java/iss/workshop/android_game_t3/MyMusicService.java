@@ -10,6 +10,7 @@ public class MyMusicService extends Service {
 
     private MediaPlayer mainMusicPlayer;
     private MediaPlayer gameMusicPlayer;
+    private float volume = 0.20f;
 
     private final IBinder musicBinder = new LocalBinder();
 
@@ -35,9 +36,12 @@ public class MyMusicService extends Service {
 
     public void playMainMusic(int resId){
         if(gameMusicPlayer != null){
-            gameMusicPlayer.pause();}
+            gameMusicPlayer.stop();
+            gameMusicPlayer = null;
+        }
         if(mainMusicPlayer != null){
-            mainMusicPlayer.pause();
+            mainMusicPlayer.stop();
+            mainMusicPlayer=null;
         }
         if (mainMusicPlayer == null){
             mainMusicPlayer = MediaPlayer.create(this,resId);
@@ -48,13 +52,16 @@ public class MyMusicService extends Service {
 
     public void playGameMusic(int resId){
         if(mainMusicPlayer != null){
-            mainMusicPlayer.pause();
+            mainMusicPlayer.stop();
+            mainMusicPlayer = null;
         }
         if(gameMusicPlayer != null){
-            gameMusicPlayer.pause();
+            gameMusicPlayer.stop();
+            gameMusicPlayer=null;
         }
         if(gameMusicPlayer == null){
             gameMusicPlayer = MediaPlayer.create(this,resId);
+            gameMusicPlayer.setVolume(volume,volume);
             gameMusicPlayer.setLooping(true);
         }
         gameMusicPlayer.start();
