@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
             //image adapter
-            Intent intent = new Intent(this, PlayActivity.class);
             Intent intent = new Intent(this, TutorialActivity.class);
 
             startActivity(intent);
