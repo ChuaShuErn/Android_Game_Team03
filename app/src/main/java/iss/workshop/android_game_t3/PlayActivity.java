@@ -276,7 +276,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //unpack all the view(congrats, score, EditName, SubmitBtn)
         TextView congratulation = myPopUpWin.findViewById(R.id.congratulations);
-        congratulation.setText("Congratulation!");
+        congratulation.setText("Congratulations");
 
         TextView scoreTextView = myPopUpWin.findViewById(R.id.score);
         scoreTextView.setText("Your score is " + score);//need to get score from getScore()?
@@ -334,6 +334,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             SharedPreferences.Editor editor = pref.edit();
             editor.putString("player"+i,inputName.getText().toString());//add nth player
             editor.putInt("score"+i,score); //add nth player's score
+            editor.putLong("time"+i, stopTime); //add nth player's time
             editor.commit();
             //data/data/iss.workshop.android_game_t3/shared_prefs/Leaderboard.xml -->check shared pref here
 
@@ -390,6 +391,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     public void restartActivity(Activity activity){
         if (Build.VERSION.SDK_INT >= 11){
             activity.recreate();
+
         }
         else{
             activity.finish();

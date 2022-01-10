@@ -1,5 +1,6 @@
 package iss.workshop.android_game_t3;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ListView;
@@ -27,6 +28,12 @@ public class LeaderboardActivity extends AppCompatActivity {
         //get list of players with their score from shared pref
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
     public ArrayList<Player> getPlayerList(){
         ArrayList<Player> playerList = new ArrayList<Player>();
         SharedPreferences pref = getSharedPreferences("Leaderboard", MODE_PRIVATE);
@@ -38,8 +45,9 @@ public class LeaderboardActivity extends AppCompatActivity {
         for(int i=0; i<count; i++){
             String name = pref.getString("player"+i,"");
             Integer score = pref.getInt("score"+i, 99);
+            Long time = pref.getLong("time"+i,0);//add time
 
-            Player player = new Player(name, score);
+            Player player = new Player(name, score, time);
             playerList.add(player);
         }
         return playerList;

@@ -2,15 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+
     <TextView
         android:id="@+id/congratulations"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="casual"
         android:text="Congratulations"
         android:textAlignment="center"
-        android:textSize="32sp"/>
+        android:textColor="@color/black"
+        android:textSize="32sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/score"
@@ -19,6 +22,7 @@
         android:layout_marginTop="20dp"
         android:text="Your Score is"
         android:textAlignment="center"
+        android:textColor="@color/black"
         android:textSize="20sp" />
 
 
@@ -26,19 +30,21 @@
         android:id="@+id/inputName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter your Name here"
-        android:inputType="textPersonName"
         android:layout_marginTop="20dp"
+        android:hint="Your Name here (Max 10 Char)"
+        android:inputType="textPersonName"
+        android:maxLength="10"
         android:textAlignment="center"
-        android:textSize="20sp"/>
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/submitBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textAlignment="center"
-        android:text="Enter Your Score"/>
+
+        android:text="Enter Your Score"
+        android:textAlignment="center" />
 
 
 </LinearLayout>

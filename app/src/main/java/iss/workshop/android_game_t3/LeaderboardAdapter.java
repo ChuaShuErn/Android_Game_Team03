@@ -35,8 +35,10 @@ public class LeaderboardAdapter extends ArrayAdapter<Object> {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.row_leaderboard, parent,false);
         }
-        TextView rankTextView = convertView.findViewById(R.id.rankTextView);
-        rankTextView.setText("");
+        TextView timeTextView = convertView.findViewById(R.id.timeTextView);
+        Integer minute = Math.toIntExact((leaderboardPlayerList.get(position).getTime() / 1000) / 60);
+        Integer second = Math.toIntExact((leaderboardPlayerList.get(position).getTime() / 1000) % 60);
+        timeTextView.setText((minute.toString() +":"+second.toString()));
 
         TextView nameTextView = convertView.findViewById(R.id.nameTextView);
         nameTextView.setText(leaderboardPlayerList.get(position).getName());
