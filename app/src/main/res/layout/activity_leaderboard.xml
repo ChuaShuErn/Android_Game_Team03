@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#CE9DD9"
     tools:context=".LeaderboardActivity">
     <LinearLayout
         android:layout_width="match_parent"
@@ -81,7 +82,8 @@
         android:id="@+id/highScoreListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
+        android:background="#F5E1FD"
         android:divider="@color/black"
         android:padding="1dp"
         android:dividerHeight="1dp"/>

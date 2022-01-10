@@ -34,12 +34,8 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView;
         if (convertView==null)
         {
-            //imageView=new ImageView(this.context);
-            //imageView.setLayoutParams(new ViewGroup.LayoutParams(360,360));
-            //imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.tile,parent,false);
         }
