@@ -1,7 +1,5 @@
 package iss.workshop.android_game_t3;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class LeaderboardActivity extends AppCompatActivity {
 
@@ -20,11 +17,11 @@ public class LeaderboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
 
-        List<Player> leaderboardPlayerList = getPlayerList();
+        ArrayList<Player> leaderboardPlayerList = getPlayerList();
         Collections.sort(leaderboardPlayerList);
 
         ListView highScoreListView = findViewById(R.id.highScoreListView);
-        LeaderboardAdapter adapter = new LeaderboardAdapter(this, (ArrayList<Player>) leaderboardPlayerList);
+        LeaderboardAdapter adapter = new LeaderboardAdapter(this, leaderboardPlayerList);
         highScoreListView.setAdapter(adapter);
         //get list of players with their score from shared pref
     }
@@ -36,7 +33,7 @@ public class LeaderboardActivity extends AppCompatActivity {
     }
 
     public ArrayList<Player> getPlayerList() {
-        ArrayList<Player> playerList = new ArrayList<Player>();
+        ArrayList<Player> playerList = new ArrayList<>();
         SharedPreferences pref = getSharedPreferences("Leaderboard", MODE_PRIVATE);
         int count = 0;
         while (pref.contains("player" + count)) {

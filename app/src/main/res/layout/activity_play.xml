@@ -60,7 +60,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_weight="1.1"
                 android:gravity="center"
-                android:text="Score: 0"
+                android:text="@string/startGameScore"
                 android:textColor="@color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -78,6 +78,7 @@
                     android:layout_gravity="end"
                     android:layout_weight="1"
                     android:adjustViewBounds="true"
+                    android:contentDescription="@string/timerImage"
                     android:scaleType="fitEnd"
                     android:src="@drawable/ic_timer" />
 
@@ -86,8 +87,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.4"
-                    android:gravity="left|center"
-                    android:paddingLeft="8dp"
+                    android:gravity="start|center"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="10dp"
                     android:textSize="19sp"
                     android:textStyle="bold|italic" />
             </LinearLayout>

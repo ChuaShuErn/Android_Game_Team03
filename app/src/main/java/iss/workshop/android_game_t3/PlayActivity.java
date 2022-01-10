@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -58,7 +57,6 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     private final ArrayList<Integer> matchedImagePositions = new ArrayList<>();
     TextView matchText;
     private long clickedStartTime;
-    private long clickedEndTime;
     private long mLastClickTime = 0;
 
     //-- Variables to be used for threads
@@ -125,22 +123,12 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //This is a thread to change displayed images back to dummy when there is no match
         handler = new Handler();
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                image1.setImageBitmap(BitmapFactory.decodeResource(PlayActivity.this.getResources(), R.drawable.dummy));
-                image2.setImageBitmap(BitmapFactory.decodeResource(PlayActivity.this.getResources(), R.drawable.dummy));
+        runnable = () -> {
+            image1.setImageBitmap(BitmapFactory.decodeResource(PlayActivity.this.getResources(), R.drawable.dummy));
+            image2.setImageBitmap(BitmapFactory.decodeResource(PlayActivity.this.getResources(), R.drawable.dummy));
 
-                image1.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
-                image2.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                    }
-                });
-            }
+            image1.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+            image2.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
         };
     }
 
@@ -150,17 +138,14 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 .setTitle("Exit Game")
                 .setMessage("Are you sure you want to exit the game?")
                 .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        Intent intent = new Intent(PlayActivity.this, MainActivity.class);
-                        startActivity(intent);
-                    }
+                .setPositiveButton(android.R.string.yes, (arg0, arg1) -> {
+                    Intent intent = new Intent(PlayActivity.this, MainActivity.class);
+                    startActivity(intent);
                 }).create().show();
     }
 
     protected void initGridView() {
-        GridView gridView = (GridView) findViewById(R.id.gameGridView);
+        GridView gridView = findViewById(R.id.gameGridView);
         ImageAdapter imageAdapter = new ImageAdapter(this);
 
         if (gridView != null) {
@@ -231,10 +216,10 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 countMatchedPairs++;
                 matchText.setText(countMatchedPairs + " of " + selectedImages.size() + " images");
                 //Calculating the score
-                clickedEndTime = System.currentTimeMillis();
-                if ((clickedEndTime - clickedStartTime) <= 3000)
+                long timeTakenToClickBothImage = System.currentTimeMillis() - clickedStartTime;
+                if ((timeTakenToClickBothImage) <= 3000)
                     score += 9; //Clicked the correct paired within 3 seconds
-                else if ((clickedEndTime - clickedStartTime) <= 5000)
+                else if ((timeTakenToClickBothImage) <= 5000)
                     score += 7;//Clicked the correct paired within 5 seconds
                 else score += 5;
             } else {
@@ -288,10 +273,10 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //unpack all the view(congrats, score, EditName, SubmitBtn)
         TextView congratulation = myPopUpWin.findViewById(R.id.congratulations);
-        congratulation.setText("Congratulation!");
+        congratulation.setText(R.string.congratulation);
 
         TextView scoreTextView = myPopUpWin.findViewById(R.id.score);
-        scoreTextView.setText("Your score is " + score);//need to get score from getScore()?
+        scoreTextView.setText(String.format("Your score is %s", score));//need to get score from getScore()?
 
         Button submitBtn = myPopUpWin.findViewById(R.id.submitBtn);
         if (submitBtn != null) {
@@ -323,7 +308,6 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 } else if (submitBtn != null)
                     submitBtn.setEnabled(true);
             }
-
         });
         myPopUpWinDialog.show();
     }
@@ -345,7 +329,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             SharedPreferences.Editor editor = pref.edit();
             editor.putString("player" + i, inputName.getText().toString());//add nth player
             editor.putInt("score" + i, score); //add nth player's score
-            editor.commit();
+            editor.apply();
             //data/data/iss.workshop.android_game_t3/shared_prefs/Leaderboard.xml -->check shared pref here
 
             //dismiss the pop up
@@ -353,7 +337,6 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             //intent send to leaderboard Activity
             Intent intent = new Intent(this, LeaderboardActivity.class);
             startActivity(intent);
-
         }
         if (id == R.id.resetGameBtn) {
             PopUpReset();
@@ -362,9 +345,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         if (id == R.id.playAgainBtn) {
             //restart activity
             restartActivity(mActivity);
-
         }
-
     }
 
     public void PopUpReset() {
@@ -396,7 +377,6 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         if (resetBtn != null) {
             resetBtn.setOnClickListener(this);
         }
-
     }
 
     public void restartActivity(Activity activity) {
@@ -408,17 +388,15 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-
     @SuppressLint("SetTextI18n")
     protected void initMatchView() {
-
         matchText = findViewById(R.id.matchCounter);
         matchText.setText(countMatchedPairs + " of " + selectedImages.size() + " images");
     }
 
     protected void startStopWatch() {
         stopWatch = findViewById(R.id.chronometer);
-        ImageView timerImage = (ImageView) findViewById(R.id.timerView);
+        ImageView timerImage = findViewById(R.id.timerView);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.shake);
         if (!isStopWatchRunning) {
             stopWatch.setBase(SystemClock.elapsedRealtime());
@@ -429,7 +407,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     protected void stopStopWatch() {
-        ImageView timerImage = (ImageView) findViewById(R.id.timerView);
+        ImageView timerImage = findViewById(R.id.timerView);
         if (isStopWatchRunning) {
             stopWatch.stop();
             stopTime = SystemClock.elapsedRealtime() - stopWatch.getBase();
