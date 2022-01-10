@@ -43,6 +43,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     private final ArrayList<ImageDTO> gameImages = new ArrayList<>();
     private Activity mActivity;
 
+
     //---This variables are used in the run-up timer
     private Chronometer stopWatch;
     private long stopTime;
@@ -130,6 +131,10 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             image1.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
             image2.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
         };
+
+        Intent musicIntent = new Intent(this, MyMusicService.class);
+        musicIntent.setAction("play_game");
+        startService(musicIntent);
     }
 
     @Override

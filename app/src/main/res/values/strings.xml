@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Android_Game_T3</string>
     <string name="fetchBtn">Fetch</string>
     <string name="url_hint">Your image catalogue URL</string>
@@ -15,4 +15,21 @@
     <string name="highScore">High Scores</string>
     <string name="startGameScore">Score: 0</string>
     <string name="timerImage">Stopwatch image</string>
+
+    <string name="tutorialHeader" tools:ignore="StringEscaping">Tutorial</string>
+    <string name="tutorial1" tools:ignore="StringEscaping">1. Press Play button</string>
+    <string name="tutorial2" tools:ignore="StringEscaping">2. Type URL of interest to retrieve images, e.g. https://stocksnap.io</string>
+    <string name="tutorial3" tools:ignore="StringEscaping">3. Press Fetch button and 20 images will appear</string>
+    <string name="tutorial4" tools:ignore="StringEscaping">4. Choose 6 images and game will start</string>
+    <string name="tutorial5" tools:ignore="StringEscaping">5. Find 6 matching pairs. Fastest hand wins.</string>
+    <string name="tutorial6" tools:ignore="StringEscaping">6. When 6 pairs match, score will be multiplied depending on your finish time</string>
+
+    <string name="scoring1"> (i) +9 points if matching card is found in less then 3 seconds</string>
+    <string name="scoring2"> (ii +7 points if matching card is found in 3 to 5 seconds</string>
+    <string name="scoring3"> (iii) +5 points if matching card is found in more then 5 seconds</string>
+    <string name="scoring4"> (iv) Points reset to remainder of 19, i.e. 1-18, if it is not matched</string>
+    <string name="scoring5"> (i) Points x54 if game finishes in less then 15 seconds</string>
+    <string name="scoring6"> (ii) Points x36 if game finishes in 25 to 30 seconds</string>
+    <string name="scoring7"> (iii) Points x3 if game finishes in more then 55 seconds</string>
+
 </resources>
