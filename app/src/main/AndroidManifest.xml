@@ -12,6 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Android_Game_T3">
+
+        <service
+            android:name=".MyMusicService"
+            android:enabled="true"
+            android:exported="false"/>
+
         <activity
             android:name=".LeaderboardActivity"
             android:exported="false" />
