@@ -16,8 +16,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button fetchBtn = findViewById(R.id.btnFetch);
-        Button playBtn = findViewById(R.id.btnPlay);
+        Button fetchBtn = findViewById(R.id.btnPlay);
+        Button tutorialBtn = findViewById(R.id.btnTutorial);
         Button leaderBoardBtn = findViewById(R.id.btnLeaderBoard);
 
         //set onClickListener
@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fetchBtn.setOnClickListener(this);
         }
 
-        if (playBtn != null) {
-            playBtn.setOnClickListener(this);
+        if (tutorialBtn != null) {
+            tutorialBtn.setOnClickListener(this);
         }
 
         if (leaderBoardBtn != null) {
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         int id = view.getId();
 
-        if (id == R.id.btnFetch) {
+        if (id == R.id.btnPlay) {
 
 
             //image adapter
@@ -49,11 +49,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 
-        if (id == R.id.btnPlay) {
+        if (id == R.id.btnTutorial) {
 
 
             //image adapter
-            Intent intent = new Intent(this, PlayActivity.class);
+            Intent intent = new Intent(this, TutorialActivity.class);
 
             startActivity(intent);
 
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setTitle("Really Exit?")
                 .setMessage("Are you sure you want to exit?")
                 .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes, ((arg0, arg1)-> MainActivity.super.onBackPressed())).create().show();
+                .setPositiveButton(android.R.string.yes, ((arg0, arg1)-> super.onBackPressed())).create().show();
     }
 }
 
