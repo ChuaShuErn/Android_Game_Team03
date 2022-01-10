@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -396,12 +395,8 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void restartActivity(Activity activity) {
-        if (Build.VERSION.SDK_INT >= 11) {
-            activity.recreate();
-        } else {
             activity.finish();
             activity.startActivity(activity.getIntent());
-        }
     }
 
     @SuppressLint("SetTextI18n")
