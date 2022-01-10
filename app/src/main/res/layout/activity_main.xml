@@ -4,56 +4,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="#ffffff">
 
     <TextView
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="The Memory Game"
-        android:textSize="36dp"
+        android:layout_height="wrap_content"
         android:fontFamily="cursive"
+        android:text="The Memory Game"
         android:textColor="#884CD4"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="40dp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/btnPlay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.47"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnPlay"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/custom_button"
+        android:fontFamily="sans-serif"
         android:text="Play"
+        android:textColor="#ffeeec"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.382" />
+        app:layout_constraintVertical_bias="0.35" />
 
     <Button
         android:id="@+id/btnTutorial"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="Tutorial"
+        android:fontFamily="sans-serif"
+        android:textStyle="bold"
+        android:background="@drawable/custom_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.515" />
+        app:layout_constraintTop_toBottomOf="@id/btnPlay"
+        app:layout_constraintVertical_bias="0.1" />
 
     <Button
         android:id="@+id/btnLeaderBoard"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="Leaderboard"
+        android:background="@drawable/custom_button"
+        android:fontFamily="sans-serif"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnTutorial"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.14" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottie_main_activity"
@@ -64,7 +76,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnLeaderBoard"
-        app:layout_constraintVertical_bias="0"
+        app:layout_constraintVertical_bias="0.05"
         app:lottie_autoPlay="true"
+        app:lottie_loop="true"
         app:lottie_rawRes="@raw/cookiespinning" />
 </androidx.constraintlayout.widget.ConstraintLayout>

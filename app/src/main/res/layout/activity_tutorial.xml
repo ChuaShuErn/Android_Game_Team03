@@ -7,24 +7,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".TutorialActivity">
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:gravity="center"
-    android:background="#A9A9A9"
-    android:textColor="@color/black"
+    tools:context=".TutorialActivity"
+    android:background="#eff7fa">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#deeff5"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center|end"
+            android:textColor="@color/black"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold"
+            android:layout_weight="1.8"
+            android:textSize="40sp"
+            android:text="@string/tutorialHeader"/>
 
-    android:textSize="40sp"
-    android:text="@string/tutorialHeader"/>
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="60dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/tutorial_cookies"/>
+    </LinearLayout>
+
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
@@ -33,7 +52,8 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/tutorial1"
-                android:textSize="20sp" />
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -42,7 +62,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/tutorial2"
-                android:textSize="20sp" />
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -51,7 +72,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/tutorial3"
-                android:textSize="20sp" />
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -60,7 +82,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/tutorial4"
-                android:textSize="20sp" />
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -69,7 +92,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/tutorial5"
-                android:textSize="20sp" />
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -78,6 +102,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/scoring1"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <TextView
@@ -87,6 +112,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/scoring2"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <TextView
@@ -96,6 +122,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/scoring3"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <TextView
@@ -105,6 +132,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/scoring4"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <TextView
@@ -114,7 +142,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/tutorial6"
-                android:textSize="20sp" />
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -123,6 +152,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/scoring5"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <TextView
@@ -132,6 +162,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/scoring6"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <TextView
@@ -141,6 +172,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/scoring7"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
         </LinearLayout>
     </ScrollView>

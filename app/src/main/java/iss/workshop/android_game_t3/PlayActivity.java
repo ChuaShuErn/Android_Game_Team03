@@ -44,7 +44,6 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     private final ArrayList<ImageDTO> gameImages = new ArrayList<>();
     private Activity mActivity;
 
-
     //---This variables are used in the run-up timer
     private Chronometer stopWatch;
     private long stopTime;
@@ -74,7 +73,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //Variables for media player
     MediaPlayer mediaPlayer;
-    private float max = 1.0f;
+    private final float max = 1.0f;
 
     //This function is just a helper method -- to be deleted
     public void getSelectedImages(List<String> filePaths) {
@@ -289,7 +288,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //unpack all the view(congrats, score, EditName, SubmitBtn)
         TextView congratulation = myPopUpWin.findViewById(R.id.congratulations);
-        congratulation.setText("Congratulations");
+        congratulation.setText(R.string.congratulation);
 
         TextView scoreTextView = myPopUpWin.findViewById(R.id.score);
         scoreTextView.setText(String.format("Your score is %s", score));//need to get score from getScore()?
@@ -345,7 +344,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             SharedPreferences.Editor editor = pref.edit();
             editor.putString("player" + i, inputName.getText().toString());//add nth player
             editor.putInt("score" + i, score); //add nth player's score
-            editor.putLong("time"+i, stopTime); //add nth player's time
+            editor.putLong("time" + i, stopTime); //add nth player's time
             editor.apply();
             //data/data/iss.workshop.android_game_t3/shared_prefs/Leaderboard.xml -->check shared pref here
 
@@ -433,14 +432,15 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    public void playMatch(){
+    public void playMatch() {
         mediaPlayer = MediaPlayer.create(this, R.raw.correct);
-        mediaPlayer.setVolume(max,max);
+        mediaPlayer.setVolume(max, max);
         mediaPlayer.start();
     }
-    public void playUnMatch(){
+
+    public void playUnMatch() {
         mediaPlayer = MediaPlayer.create(this, R.raw.wrong);
-        mediaPlayer.setVolume(max,max);
+        mediaPlayer.setVolume(max, max);
         mediaPlayer.start();
     }
 }
