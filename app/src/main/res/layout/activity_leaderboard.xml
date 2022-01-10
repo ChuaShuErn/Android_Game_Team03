@@ -7,20 +7,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".LeaderboardActivity">
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:orientation="horizontal">
     <TextView
         android:id="@+id/highScoreHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_marginTop="40dp"
-        android:layout_gravity="center"
+        android:layout_weight="1.8"
+        android:gravity="center|end"
         android:fontFamily="casual"
         android:textStyle="bold"
         android:text="High Scores"
-        android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="40sp" />
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_leaderboard"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="100dp"
+            android:layout_marginTop="20dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/leaderboard"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

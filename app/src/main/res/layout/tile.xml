@@ -6,7 +6,7 @@
     <ImageView
         android:id="@+id/gameImageView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="115dp"
         android:background="@drawable/border_image"
         android:clickable="false"
         android:cropToPadding="true"

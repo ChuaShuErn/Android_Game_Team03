@@ -156,7 +156,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     }
 
     protected void enterNewURLToast(int errorCode) {
-        String msg = "";
+        String msg;
         if (errorCode == 2)
             msg = "Insufficient images on webpage. \nPlease enter a URL with more images";
         else if (errorCode == 3)
@@ -196,7 +196,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
     protected void initGridView() {
         setDefaultImage();
-        GridView gridView = (GridView) findViewById(R.id.fetchedImageGridView);
+        GridView gridView = findViewById(R.id.fetchedImageGridView);
         adapter = new FetchedImageAdapter(this, fetchedImages);
         listener = new SelectImgListener(this);
 
@@ -217,7 +217,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     }
 
     protected void resetGridView() {
-        GridView gridView = (GridView) findViewById(R.id.fetchedImageGridView);
+        GridView gridView = findViewById(R.id.fetchedImageGridView);
         adapter = new FetchedImageAdapter(this, fetchedImages);
         listener = new SelectImgListener(this);
 
@@ -239,60 +239,57 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
             urlSearchBar.clearFocus();
 
-            downloadImageThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    isDownloadThreadRunning = true; //start running, say True
-                    mURL = urlSearchBar.getText().toString();
+            downloadImageThread = new Thread(() -> {
+                isDownloadThreadRunning = true; //start running, say True
+                mURL = urlSearchBar.getText().toString();
 
-                    imgFileList = createDestFiles(); //get twenty blank files to store
-                    int fetchURLStatusCode = getImgUrlList();
+                imgFileList = createDestFiles(); //get twenty blank files to store
+                int fetchURLStatusCode = getImgUrlList();
 
 
 
-                    if (fetchURLStatusCode == 1) {
-                        System.out.println("All good---ImgURLList Have-" + imgUrlList.size() + " URL strings");
-                        fetchedImages = new ArrayList<>();
-                        Collections.shuffle(imgUrlList);
-                        runOnUiThread(new progressUiRunnable(0));
+                if (fetchURLStatusCode == 1) {
+                    System.out.println("All good---ImgURLList Have-" + imgUrlList.size() + " URL strings");
+                    fetchedImages = new ArrayList<>();
+                    Collections.shuffle(imgUrlList);
+                    runOnUiThread(new progressUiRunnable(0));
 
-                        while (fetchedImages.size() < FETCH_IMAGES_MAX) {
-                            if (Thread.interrupted()) {
-                                runOnUiThread(() -> {
-                                    housekeepOnDownloadInterrupt();
-                                    resetGridView();
-                                });
-                                return;
-                            }
-
-                            else {
-                                int i = fetchedImages.size();
-                                if (downloadThisImage(imgUrlList.get(i), imgFileList.get(i))) {
-                                    int imgID = i + 1;
-                                    fetchedImages.add(decodeImageIntoDTO(imgFileList.get(i), imgID));
-
-                                    System.out.println("Adding fetchImages ImageDTO object ---->> No." + fetchedImages.size());
-
-                                    runOnUiThread(new progressUiRunnable(fetchedImages.size()));
-                                }
-                            }
-                        }
-                        System.out.println("there are ..." + fetchedImages.size() + " imageDTO objects in fetchedImages");
-                        setUpListener();
-
-                    } else {
-                        if (fetchURLStatusCode == 2) { //
-                            runOnUiThread(() -> enterNewURLToast(2));
-                        } else if  (fetchURLStatusCode == 3 ) { // 3 = invalid URL
-                            runOnUiThread(() -> enterNewURLToast(3));
-                        } else { // 3 = invalid URL
-                            runOnUiThread(() -> enterNewURLToast(4));
+                    while (fetchedImages.size() < FETCH_IMAGES_MAX) {
+                        if (Thread.interrupted()) {
+                            runOnUiThread(() -> {
+                                housekeepOnDownloadInterrupt();
+                                resetGridView();
+                            });
+                            return;
                         }
 
+                        else {
+                            int i = fetchedImages.size();
+                            if (downloadThisImage(imgUrlList.get(i), imgFileList.get(i))) {
+                                int imgID = i + 1;
+                                fetchedImages.add(decodeImageIntoDTO(imgFileList.get(i), imgID));
+
+                                System.out.println("Adding fetchImages ImageDTO object ---->> No." + fetchedImages.size());
+
+                                runOnUiThread(new progressUiRunnable(fetchedImages.size()));
+                            }
+                        }
+                    }
+                    System.out.println("there are ..." + fetchedImages.size() + " imageDTO objects in fetchedImages");
+                    setUpListener();
+
+                } else {
+                    if (fetchURLStatusCode == 2) { //
+                        runOnUiThread(() -> enterNewURLToast(2));
+                    } else if  (fetchURLStatusCode == 3 ) { // 3 = invalid URL
+                        runOnUiThread(() -> enterNewURLToast(3));
+                    } else { // 3 = invalid URL
+                        runOnUiThread(() -> enterNewURLToast(4));
                     }
 
-                    isDownloadThreadRunning = false;
                 }
+
+                isDownloadThreadRunning = false;
             });
 
 
@@ -333,7 +330,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
         progressBar.setVisibility(View.VISIBLE);
         progressBar.setProgress(5*numberDone);
-        Integer progress = progressBar.getProgress();
+        int progress = progressBar.getProgress();
 
         //2 - Update Progress Text
         System.out.println("UPDATING PROGRESS TEXT:  ==== " + numberDone);
@@ -360,22 +357,20 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
     protected void housekeepOnDownloadInterrupt() {
 
-        fetchedImages = new ArrayList<>();;
+        fetchedImages = new ArrayList<>();
 
     }
 
     public class FetchedImageAdapter extends BaseAdapter{
 
-        private final Context context;
-        private LayoutInflater inflater;
+        private final LayoutInflater inflater;
 
         public FetchedImageAdapter(Context context, ArrayList<ImageDTO> fetchedImages) {
-            this.context = context;
             this.fetchedImages = fetchedImages;
             this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
-        private ArrayList<ImageDTO> fetchedImages;
+        private final ArrayList<ImageDTO> fetchedImages;
 
         @Override
         public int getCount() {
