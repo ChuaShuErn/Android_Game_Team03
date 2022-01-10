@@ -9,8 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <!--<EditText
             android:id="@+id/urlSearchBar"
@@ -27,36 +27,35 @@
             android:layout_height="match_parent"
             android:layout_weight="0.85"
             android:hint="@string/url_hint"
-            android:textSize="15sp"/>
-
+            android:textSize="15sp" />
 
 
         <Button
             android:id="@+id/fetchBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/fetchBtn"
-            android:backgroundTint="@color/black"
-            tools:layout_editor_absoluteX="301dp"
-            tools:layout_editor_absoluteY="49dp"
             android:layout_marginStart="4dp"
-            android:padding="10dp"/>
+            android:backgroundTint="@color/black"
+            android:padding="10dp"
+            android:text="@string/fetchBtn"
+            tools:layout_editor_absoluteX="301dp"
+            tools:layout_editor_absoluteY="49dp" />
     </LinearLayout>
 
     <GridView
         android:id="@+id/fetchedImageGridView"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:numColumns="4"
         android:horizontalSpacing="4dp"
+        android:numColumns="4"
         android:verticalSpacing="4dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="15dp"
+        android:layout_height="30dp"
         android:layout_marginTop="10dp"
         android:backgroundTint="#3EE7ED"
         android:progress="0"

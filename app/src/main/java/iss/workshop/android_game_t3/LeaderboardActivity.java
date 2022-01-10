@@ -17,7 +17,6 @@ public class LeaderboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         List<Player> leaderboardPlayerList = getPlayerList();
         Collections.sort(leaderboardPlayerList);
@@ -30,12 +29,12 @@ public class LeaderboardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(LeaderboardActivity.this, MainActivity.class);
         startActivity(intent);
     }
 
-    public ArrayList<Player> getPlayerList(){
-        ArrayList<Player> playerList = new ArrayList<Player>();
+    public ArrayList<Player> getPlayerList() {
+        ArrayList<Player> playerList = new ArrayList<>();
         SharedPreferences pref = getSharedPreferences("Leaderboard", MODE_PRIVATE);
         int count = 0;
         while(pref.contains("player" + count)){

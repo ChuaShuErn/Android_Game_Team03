@@ -10,4 +10,9 @@
     <string name="Speed">Speed is Key! Are you ready?</string>
     <string name="LetsGo">Let\'s Go!</string>
     <string name="reset">Reset</string>
+    <string name="congratulation">Congratulation!</string>
+    <string name="imageView">Image to be flipped</string>
+    <string name="highScore">High Scores</string>
+    <string name="startGameScore">Score: 0</string>
+    <string name="timerImage">Stopwatch image</string>
 </resources>

@@ -15,8 +15,8 @@
         android:layout_marginTop="40dp"
         android:layout_gravity="center"
         android:fontFamily="casual"
-        android:text="High Scores"
         android:textStyle="bold"
+        android:text="High Scores"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="40sp" />

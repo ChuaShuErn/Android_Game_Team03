@@ -3,6 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/Android_Game_Team03/app/src/main/res/layout/activity_fetch.xml" value="0.1" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/Android_Game_Team03/app/src/main/res/layout/activity_leaderboard.xml" value="0.1546875" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/Android_Game_Team03/app/src/main/res/layout/activity_play.xml" value="0.15092592592592594" />
+        <entry key="..\:/Users/shuer/AndroidStudioProjects/Android_Game_T3/app/src/main/res/drawable-v24/circle.xml" value="0.14322916666666666" />
+        <entry key="..\:/Users/shuer/AndroidStudioProjects/Android_Game_T3/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.13229166666666667" />
+        <entry key="..\:/Users/shuer/AndroidStudioProjects/Android_Game_T3/app/src/main/res/drawable-v24/tickbox.xml" value="0.14322916666666666" />
+        <entry key="..\:/Users/shuer/AndroidStudioProjects/Android_Game_T3/app/src/main/res/drawable/border_image.xml" value="0.14322916666666666" />
+        <entry key="..\:/Users/shuer/AndroidStudioProjects/Android_Game_T3/app/src/main/res/drawable/ic_launcher_background.xml" value="0.13229166666666667" />
+        <entry key="..\:/Users/shuer/AndroidStudioProjects/Android_Game_T3/app/src/main/res/layout/activity_fetch.xml" value="0.11979166666666667" />
         <entry key="..\:/Users/Diego/AndroidStudioProjects/Android_Game_Team03/app/src/main/res/drawable/ic_timer.xml" value="0.21458333333333332" />
         <entry key="..\:/Users/Diego/AndroidStudioProjects/Android_Game_Team03/app/src/main/res/layout/activity_fetch.xml" value="0.17325227963525835" />
         <entry key="..\:/Users/Diego/AndroidStudioProjects/Android_Game_Team03/app/src/main/res/layout/activity_leaderboard.xml" value="0.1984375" />
@@ -21,6 +30,12 @@
         <entry key="..\:/Users/manas/AndroidStudioProjects/Android_Game_Team03/app/src/main/res/layout/tile.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/manue/AndroidStudioProjects/Android_Game_Team03/app/src/main/res/layout/activity_fetch.xml" value="0.2" />
         <entry key="..\:/Users/shuer/AndroidStudioProjects/Android_Game_T3/app/src/main/res/layout/activity_main.xml" value="0.11302083333333333" />
+        <entry key="..\:/Users/shuer/AndroidStudioProjects/Android_Game_T3/app/src/main/res/layout/activity_play.xml" value="0.264" />
+        <entry key="..\:/Users/shuer/AndroidStudioProjects/Android_Game_T3/app/src/main/res/layout/grid_item.xml" value="0.12708333333333333" />
+        <entry key="..\:/Users/shuer/AndroidStudioProjects/Android_Game_T3/app/src/main/res/layout/pop_up_lose.xml" value="0.2" />
+        <entry key="..\:/Users/shuer/AndroidStudioProjects/Android_Game_T3/app/src/main/res/layout/pop_up_win.xml" value="0.12708333333333333" />
+        <entry key="..\:/Users/shuer/AndroidStudioProjects/Android_Game_T3/app/src/main/res/layout/row_leaderboard.xml" value="0.12708333333333333" />
+        <entry key="..\:/Users/shuer/AndroidStudioProjects/Android_Game_T3/app/src/main/res/layout/tile.xml" value="0.12708333333333333" />
       </map>
     </option>
   </component>
