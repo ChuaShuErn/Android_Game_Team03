@@ -50,6 +50,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    public void onPause(){
+        super.onPause();
+        Intent intent = new Intent(this, MyMusicService.class);
+        intent.setAction("pause_music");
+        startService(intent);
+    }
+
+    @Override
     public void onClick(View view) {
         int id = view.getId();
 
