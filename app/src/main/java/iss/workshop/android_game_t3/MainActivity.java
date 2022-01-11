@@ -1,6 +1,5 @@
 package iss.workshop.android_game_t3;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -102,21 +101,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     finishAffinity();
                     System.exit(0);})).create().show();
     }
-
-//    //@Override
-//   // public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-//      //  MyMusicService.LocalBinder musicBinder = (MyMusicService.LocalBinder) iBinder;
-//     //   if (musicBinder != null)
-//     //   {
-//       //     musicService = musicBinder.getService();
-//     //       musicService.playMusic();
-//      //  }
-//    }
-
-//    @Override
-//    public void onServiceDisconnected(ComponentName componentName) {
-//
-//    }
 }
 
 

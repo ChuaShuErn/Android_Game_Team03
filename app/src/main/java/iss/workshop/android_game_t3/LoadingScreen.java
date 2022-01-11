@@ -24,13 +24,10 @@ public class LoadingScreen extends AppCompatActivity {
         team3.animate().translationY(1400).setDuration(1000).setStartDelay(4000);
         lottieAnimationView.animate().translationY(1400).setDuration(1000).setStartDelay(4000);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent=new Intent(LoadingScreen.this,MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        new Handler().postDelayed(() -> {
+            Intent intent=new Intent(LoadingScreen.this,MainActivity.class);
+            startActivity(intent);
+            finish();
         },5300);
 
     }

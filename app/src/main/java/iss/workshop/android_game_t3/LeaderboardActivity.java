@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class LeaderboardActivity extends AppCompatActivity {
 
@@ -22,11 +21,11 @@ public class LeaderboardActivity extends AppCompatActivity {
         intent.setAction("play_leaderboard");
         startService(intent);
 
-        List<Player> leaderboardPlayerList = getPlayerList();
+        ArrayList<Player> leaderboardPlayerList = getPlayerList();
         Collections.sort(leaderboardPlayerList);
 
         ListView highScoreListView = findViewById(R.id.highScoreListView);
-        LeaderboardAdapter adapter = new LeaderboardAdapter(this, (ArrayList<Player>) leaderboardPlayerList);
+        LeaderboardAdapter adapter = new LeaderboardAdapter(this, leaderboardPlayerList);
         highScoreListView.setAdapter(adapter);
         //get list of players with their score from shared pref
     }

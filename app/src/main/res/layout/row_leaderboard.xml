@@ -12,7 +12,7 @@
         android:textColor="@color/black"
         android:layout_marginStart="20dp"
         android:gravity="center_vertical"
-        android:text="Name" />
+        android:text="@string/leaderboard_name" />
 
     <TextView
         android:id="@+id/scoreTextView"
@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:layout_marginStart="20dp"
         android:gravity="center"
-        android:text="Score"
+        android:text="@string/leaderboard_score"
         android:textColor="@color/black"
         android:textSize="20sp" />
 
@@ -31,7 +31,7 @@
         android:layout_marginStart="20dp"
         android:fontFamily="sans-serif"
         android:gravity="center"
-        android:text="Time"
+        android:text="@string/leaderboard_time"
         android:textColor="@color/black"
         android:textSize="20sp" />
 

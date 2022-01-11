@@ -16,6 +16,23 @@
     <string name="startGameScore">Score: 0</string>
     <string name="timerImage">Stopwatch image</string>
 
+    <string name="congratulation_popup">Congratulations</string>
+    <string name="your_score_is">Your Score is</string>
+    <string name="pop_up_hint">Your Name here (Max 10 Char)</string>
+    <string name="pop_up_btn">Enter Your Score</string>
+
+    <string name="leaderboard_high_score">High Scores</string>
+    <string name="leaderboard_score">Score</string>
+    <string name="leaderboard_name">Name</string>
+    <string name="leaderboard_time">Time</string>
+
+    <string name="main_header">The Memory Game</string>
+    <string name="main_play">Play</string>
+    <string name="main_tutorial">Tutorial</string>
+    <string name="main_leaderboard">Leaderboard</string>
+
+    <string name="loading_screen_created">Created by: Team 3</string>
+
     <string name="tutorialHeader" tools:ignore="StringEscaping">Tutorial</string>
     <string name="tutorial1" tools:ignore="StringEscaping">1. Press Play button</string>
     <string name="tutorial2" tools:ignore="StringEscaping">2. Type URL of interest to retrieve images, e.g. https://stocksnap.io</string>
@@ -27,7 +44,7 @@
     <string name="scoring1"> (i) +9 points if matching card is found in less then 3 seconds</string>
     <string name="scoring2"> (ii +7 points if matching card is found in 3 to 5 seconds</string>
     <string name="scoring3"> (iii) +5 points if matching card is found in more then 5 seconds</string>
-    <string name="scoring4"> (iv) Points reset to remainder of 19, i.e. 1-18, if it is not matched</string>
+    <string name="scoring4"> (iv) Points reset to remainder of 19, i.e. 1–18, if it is not matched</string>
     <string name="scoring5"> (i) Points x54 if game finishes in less then 15 seconds</string>
     <string name="scoring6"> (ii) Points x36 if game finishes in 25 to 30 seconds</string>
     <string name="scoring7"> (iii) Points x3 if game finishes in more then 55 seconds</string>

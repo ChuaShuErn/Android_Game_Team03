@@ -1,9 +1,9 @@
 package iss.workshop.android_game_t3;
 
 public class Player implements Comparable<Player>{
-    private String name;
-    private Integer score;
-    private Long time;
+    private final String name;
+    private final Integer score;
+    private final Long time;
 
     public Player(String name, Integer score, Long time) {
         this.name = name;

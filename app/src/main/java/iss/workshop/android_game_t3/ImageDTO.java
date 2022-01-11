@@ -3,8 +3,8 @@ package iss.workshop.android_game_t3;
 import android.graphics.Bitmap;
 
 public class ImageDTO {
-    private int id;
-    private Bitmap bitmap;
+    private final int id;
+    private final Bitmap bitmap;
 
     public ImageDTO(int id, Bitmap bitmap) {
         this.id = id;

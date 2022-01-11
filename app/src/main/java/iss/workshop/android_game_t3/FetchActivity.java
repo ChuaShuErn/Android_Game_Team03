@@ -41,20 +41,16 @@ import java.util.List;
 public class FetchActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final int FETCH_IMAGES_MAX = 20;
-    private final int SELECT_IMAGES_MAX = 6;
     private String mURL; // this is to hold the image catalogue URL
     private File myDirectory;
     private ArrayList<File> imgFileList;
     private ArrayList<String> imgUrlList;
     private ArrayList<ImageDTO> fetchedImages;
-    private ArrayList<ImageDTO> selectedImages;
     private boolean isDownloadThreadRunning;
     private Thread downloadImageThread;
 
     //View attributes
     private AutoCompleteTextView urlSearchBar;
-    private Button fetchBtn;
-    private GridView imageGridView;
     private SelectImgListener listener;
     private BaseAdapter adapter;
     private ProgressBar progressBar;
@@ -90,19 +86,16 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
         urlSearchBar = findViewById(R.id.urlSearchBar);
         urlSearchBar.setFocusableInTouchMode(true);
-        urlSearchBar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (!b) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(urlSearchBar.getWindowToken(), 0);
-                }
+        urlSearchBar.setOnFocusChangeListener((view, b) -> {
+            if (!b) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(urlSearchBar.getWindowToken(), 0);
             }
         });
         urlSearchBar.setThreshold(1);
         urlSearchBar.setAdapter(urlAdapter);
 
-        fetchBtn = findViewById(R.id.fetchBtn);
+        Button fetchBtn = findViewById(R.id.fetchBtn);
         if (fetchBtn != null)
             fetchBtn.setOnClickListener(this);
         isDownloadThreadRunning = false; //create page with false running
@@ -150,10 +143,13 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
             parseHTMLImgURLs();
             if (imgUrlList != null && imgUrlList.size() >= 20) {
                 return 1; //1 = all good
-            } else if (imgUrlList.size() < 20) {
-                return 2;
-            } else
-                return 3;
+            } else {
+                assert imgUrlList != null;
+                if (imgUrlList.size() < 20) {
+                    return 2;
+                } else
+                    return 3;
+            }
         } catch (Exception e) {
             if (mURL.isEmpty() || mURL.trim().isEmpty())
                 return 4; //invalid url
@@ -186,7 +182,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
             InputStream in = conn.getInputStream(); // create an input stream to read received data
             FileOutputStream out = new FileOutputStream(destFile); // output stream to write data into destination file
             byte[] buffer = new byte[1024];
-            int bytesRead = -1;
+            int bytesRead;
             while ((bytesRead = in.read(buffer)) != -1) {
                 out.write(buffer, 0, bytesRead);
             }
@@ -229,9 +225,6 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(listener);
-
-        //progressBar.setVisibility(View.INVISIBLE);
-        //progressText.setText("");
     }
 
     @Override
@@ -263,7 +256,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
                     while (fetchedImages.size() < FETCH_IMAGES_MAX) {
                         if (Thread.interrupted()) {
                             runOnUiThread(() -> {
-                                housekeepOnDownloadInterrupt();
+                                houseKeepOnDownloadInterrupt();
                                 resetGridView();
                             });
                             return;
@@ -353,7 +346,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         System.out.println("UPDATING GridView:  ==== " + numberDone);
 
         FetchedImageAdapter fetchedImageAdapter = new FetchedImageAdapter(this, fetchedImages);
-        imageGridView = findViewById(R.id.fetchedImageGridView);
+        GridView imageGridView = findViewById(R.id.fetchedImageGridView);
         if(imageGridView != null){
             imageGridView.setAdapter(fetchedImageAdapter);
         }
@@ -361,7 +354,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    protected void housekeepOnDownloadInterrupt() {
+    protected void houseKeepOnDownloadInterrupt() {
 
         fetchedImages = new ArrayList<>();
 

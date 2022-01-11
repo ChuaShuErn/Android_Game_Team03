@@ -21,7 +21,7 @@
         android:gravity="center|end"
         android:fontFamily="casual"
         android:textStyle="bold"
-        android:text="High Scores"
+        android:text="@string/leaderboard_high_score"
         android:textColor="@color/black"
         android:textSize="40sp" />
 
@@ -47,9 +47,9 @@
             android:layout_width="125dp"
             android:layout_height="match_parent"
             android:layout_marginStart="20dp"
-            android:fontFamily="sans-serif-smallcaps"
+            android:fontFamily="sans-serif-condensed-light"
             android:gravity="center_vertical"
-            android:text="Name"
+            android:text="@string/leaderboard_name"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -58,9 +58,9 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:layout_marginStart="20dp"
-            android:fontFamily="sans-serif-smallcaps"
+            android:fontFamily="sans-serif-condensed-light"
             android:gravity="center"
-            android:text="Score"
+            android:text="@string/leaderboard_score"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -70,9 +70,9 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:layout_marginStart="20dp"
-            android:fontFamily="sans-serif-smallcaps"
+            android:fontFamily="sans-serif-condensed-light"
             android:gravity="center"
-            android:text="Time"
+            android:text="@string/leaderboard_time"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />

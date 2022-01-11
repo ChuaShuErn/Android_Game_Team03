@@ -1,5 +1,6 @@
 package iss.workshop.android_game_t3;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,8 +15,8 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 public class LeaderboardAdapter extends ArrayAdapter<Object> {
-    private Context context;
-    private ArrayList<Player> leaderboardPlayerList = new ArrayList<Player>();
+    private final Context context;
+    private final ArrayList<Player> leaderboardPlayerList;
 
     public LeaderboardAdapter(@NonNull Context context, ArrayList<Player> leaderboardPlayerList) {
         super(context, R.layout.row_leaderboard);
@@ -25,6 +26,7 @@ public class LeaderboardAdapter extends ArrayAdapter<Object> {
         addAll(new Object[leaderboardPlayerList.size()]);
     }
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -36,9 +38,9 @@ public class LeaderboardAdapter extends ArrayAdapter<Object> {
             convertView = inflater.inflate(R.layout.row_leaderboard, parent,false);
         }
         TextView timeTextView = convertView.findViewById(R.id.timeTextView);
-        Integer minute = Math.toIntExact((leaderboardPlayerList.get(position).getTime() / 1000) / 60);
-        Integer second = Math.toIntExact((leaderboardPlayerList.get(position).getTime() / 1000) % 60);
-        timeTextView.setText((minute.toString() +":"+second.toString()));
+        int minute = Math.toIntExact((leaderboardPlayerList.get(position).getTime() / 1000) / 60);
+        int second = Math.toIntExact((leaderboardPlayerList.get(position).getTime() / 1000) % 60);
+        timeTextView.setText((minute +":"+ second));
 
         TextView nameTextView = convertView.findViewById(R.id.nameTextView);
         nameTextView.setText(leaderboardPlayerList.get(position).getName());

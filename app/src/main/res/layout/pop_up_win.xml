@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="casual"
-        android:text="Congratulations"
+        android:text="@string/congratulation_popup"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="32sp"
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Your Score is"
+        android:text="@string/your_score_is"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="20sp" />
@@ -31,11 +31,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:hint="Your Name here (Max 10 Char)"
+        android:hint="@string/pop_up_hint"
         android:inputType="textPersonName"
         android:maxLength="10"
         android:textAlignment="center"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/submitBtn"
@@ -43,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/play_reset_button"
-        android:text="Enter Your Score"
+        android:text="@string/pop_up_btn"
         android:textAlignment="center" />
 
 
