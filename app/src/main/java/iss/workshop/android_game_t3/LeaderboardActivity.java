@@ -18,6 +18,10 @@ public class LeaderboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
 
+        Intent intent = new Intent(this, MyMusicService.class);
+        intent.setAction("play_leaderboard");
+        startService(intent);
+
         List<Player> leaderboardPlayerList = getPlayerList();
         Collections.sort(leaderboardPlayerList);
 
@@ -50,5 +54,21 @@ public class LeaderboardActivity extends AppCompatActivity {
             playerList.add(player);
         }
         return playerList;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Intent intent = new Intent(this, MyMusicService.class);
+        intent.setAction("play_leaderboard");
+        startService(intent);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Intent intent = new Intent(this,MyMusicService.class);
+        intent.setAction("pause_music");
+        startService(intent);
     }
 }

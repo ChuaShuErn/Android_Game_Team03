@@ -1,6 +1,7 @@
 package iss.workshop.android_game_t3;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -63,6 +64,11 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = new Intent(this, MyMusicService.class);
+        intent.setAction("play_fetch");
+        startService(intent);
+
         setContentView(R.layout.activity_fetch);
 
         myDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -407,6 +413,21 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
 
             return convertView;
         }
+    }
+    @Override
+    public void onPause(){
+        super.onPause();
+        Intent intent = new Intent(this, MyMusicService.class);
+        intent.setAction("pause_music");
+        startService(intent);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Intent intent = new Intent(this,MyMusicService.class);
+        intent.setAction("play_fetch");
+        startService(intent);
     }
 
 

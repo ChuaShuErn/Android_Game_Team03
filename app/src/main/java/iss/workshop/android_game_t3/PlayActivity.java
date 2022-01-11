@@ -438,4 +438,19 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         mediaPlayer.setVolume(max, max);
         mediaPlayer.start();
     }
+    @Override
+    public void onPause(){
+        super.onPause();
+        Intent intent = new Intent(this, MyMusicService.class);
+        intent.setAction("pause_music");
+        startService(intent);
+
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        Intent intent = new Intent(this, MyMusicService.class);
+        intent.setAction("play_game");
+        startService(intent);
+    }
 }
