@@ -41,20 +41,16 @@ import java.util.List;
 public class FetchActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final int FETCH_IMAGES_MAX = 20;
-    private final int SELECT_IMAGES_MAX = 6;
     private String mURL; // this is to hold the image catalogue URL
     private File myDirectory;
     private ArrayList<File> imgFileList;
     private ArrayList<String> imgUrlList;
     private ArrayList<ImageDTO> fetchedImages;
-    private ArrayList<ImageDTO> selectedImages;
     private boolean isDownloadThreadRunning;
     private Thread downloadImageThread;
 
     //View attributes
     private AutoCompleteTextView urlSearchBar;
-    private Button fetchBtn;
-    private GridView imageGridView;
     private SelectImgListener listener;
     private BaseAdapter adapter;
     private ProgressBar progressBar;
@@ -70,7 +66,6 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         startService(intent);
 
         setContentView(R.layout.activity_fetch);
-
         myDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
         ArrayList<String> exampleURLs = new ArrayList<String> (){
@@ -84,25 +79,21 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
             }
         };
 
-
         ArrayAdapter<String> urlAdapter =
                 new ArrayAdapter(this,android.R.layout.simple_list_item_1, exampleURLs);
 
         urlSearchBar = findViewById(R.id.urlSearchBar);
         urlSearchBar.setFocusableInTouchMode(true);
-        urlSearchBar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (!b) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(urlSearchBar.getWindowToken(), 0);
-                }
+        urlSearchBar.setOnFocusChangeListener((view, b) -> {
+            if (!b) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(urlSearchBar.getWindowToken(), 0);
             }
         });
         urlSearchBar.setThreshold(1);
         urlSearchBar.setAdapter(urlAdapter);
 
-        fetchBtn = findViewById(R.id.fetchBtn);
+        Button fetchBtn = findViewById(R.id.fetchBtn);
         if (fetchBtn != null)
             fetchBtn.setOnClickListener(this);
         isDownloadThreadRunning = false; //create page with false running
@@ -150,13 +141,13 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
             parseHTMLImgURLs();
             if (imgUrlList != null && imgUrlList.size() >= 20) {
                 return 1; //1 = all good
-            } else if (imgUrlList.size() < 20) {
-                return 2;
+            } else if (imgUrlList != null) {
+                return 2; // not enough images
             } else
-                return 3;
+                return 3; //invalid url
         } catch (Exception e) {
-            if (mURL.isEmpty() || mURL.trim().isEmpty())
-                return 4; //invalid url
+            if (mURL.trim().isEmpty())
+                return 4; //blank url field
             return 3;
         }
     }
@@ -343,7 +334,6 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         if(progress == 100){
             loadingText = "Download completed. \nSelect 6 images to start game!";
 
-            //Toast.makeText(FetchActivity.this, "Select 6 images to start game!", Toast.LENGTH_LONG).show();
         }
         progressText.setText(loadingText);
 
@@ -351,7 +341,7 @@ public class FetchActivity extends AppCompatActivity implements View.OnClickList
         System.out.println("UPDATING GridView:  ==== " + numberDone);
 
         FetchedImageAdapter fetchedImageAdapter = new FetchedImageAdapter(this, fetchedImages);
-        imageGridView = findViewById(R.id.fetchedImageGridView);
+        GridView imageGridView = findViewById(R.id.fetchedImageGridView);
         if(imageGridView != null){
             imageGridView.setAdapter(fetchedImageAdapter);
         }
